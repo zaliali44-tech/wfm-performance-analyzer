@@ -7,17 +7,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root{
-      --bg:#0f172a;
-      --panel:#111827;
-      --panel-2:#1f2937;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --line:#334155;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --accent:#38bdf8;
-      --accent2:#8b5cf6;
+      --bg:#f4f7fb;
+      --panel:#ffffff;
+      --panel-2:#eef6ff;
+      --text:#111827;
+      --muted:#64748b;
+      --line:#dbe4f0;
+      --good:#16a34a;
+      --warn:#d97706;
+      --bad:#dc2626;
+      --accent:#2c7be5;
+      --accent2:#60a5fa;
+      --table-head:#eef2f7;
+      --canvas-bg:#f8fbff;
     }
 
     *{box-sizing:border-box}
@@ -25,7 +27,7 @@
     body{
       margin:0;
       font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg,#0b1220 0%, #111827 100%);
+      background:var(--bg);
       color:var(--text);
     }
 
@@ -42,6 +44,7 @@
     .page-title h1{
       margin:0 0 8px 0;
       font-size:30px;
+      color:var(--text);
     }
 
     .page-title p{
@@ -51,17 +54,18 @@
     }
 
     .panel{
-      background:rgba(17,24,39,0.95);
+      background:var(--panel);
       border:1px solid var(--line);
       border-radius:16px;
       padding:18px;
       margin-bottom:18px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+      box-shadow:0 3px 10px rgba(0,0,0,0.08);
     }
 
     .panel h2, .panel h3{
       margin-top:0;
       margin-bottom:10px;
+      color:var(--text);
     }
 
     .small{
@@ -89,13 +93,13 @@
 
     .btn, .file-label{
       border:none;
-      border-radius:12px;
+      border-radius:8px;
       padding:10px 14px;
       cursor:pointer;
       font-size:14px;
-      background:#1e293b;
-      color:#fff;
-      border:1px solid #475569;
+      background:#ffffff;
+      color:var(--accent);
+      border:1px solid var(--line);
       transition:0.2s ease;
       text-decoration:none;
       display:inline-block;
@@ -103,12 +107,17 @@
 
     .btn:hover, .file-label:hover{
       transform:translateY(-1px);
-      background:#243244;
+      background:#f0f6ff;
     }
 
     .btn-primary{
-      background:linear-gradient(90deg,#0ea5e9,#8b5cf6);
-      border:none;
+      background:var(--accent);
+      color:#ffffff;
+      border:1px solid var(--accent);
+    }
+
+    .btn-primary:hover{
+      background:#1f6ad0;
     }
 
     .validation-grid{
@@ -119,7 +128,7 @@
     }
 
     .mini-card{
-      background:#0b1220;
+      background:var(--panel-2);
       border:1px solid var(--line);
       border-radius:12px;
       padding:14px;
@@ -129,6 +138,7 @@
       font-size:22px;
       font-weight:700;
       margin-top:8px;
+      color:var(--text);
     }
 
     .kpi-grid{
@@ -139,10 +149,11 @@
     }
 
     .kpi-card{
-      background:linear-gradient(180deg,#111827,#0f172a);
+      background:var(--panel);
       border:1px solid var(--line);
       border-radius:14px;
       padding:16px;
+      box-shadow:0 3px 10px rgba(0,0,0,0.05);
     }
 
     .kpi-card .label{
@@ -155,6 +166,7 @@
       font-size:28px;
       font-weight:700;
       margin-bottom:6px;
+      color:var(--text);
     }
 
     .good{color:var(--good)}
@@ -175,9 +187,10 @@
     canvas{
       width:100% !important;
       height:360px !important;
-      background:#0b1220;
+      background:var(--canvas-bg);
       border-radius:12px;
       padding:10px;
+      border:1px solid var(--line);
     }
 
     .section-head{
@@ -192,7 +205,7 @@
     .summary-box{
       line-height:1.7;
       white-space:pre-wrap;
-      color:#dbe2ea;
+      color:var(--text);
     }
 
     .table-wrap{
@@ -206,25 +219,27 @@
       width:100%;
       min-width:1200px;
       border-collapse:collapse;
+      background:#fff;
     }
 
     th, td{
       padding:11px 12px;
-      border-bottom:1px solid #253043;
+      border-bottom:1px solid var(--line);
       text-align:left;
       vertical-align:top;
       font-size:13px;
+      color:var(--text);
     }
 
     thead th{
       position:sticky;
       top:0;
-      background:#0b1220;
+      background:var(--table-head);
       z-index:2;
     }
 
     tr:hover td{
-      background:rgba(30,41,59,0.25);
+      background:#f8fbff;
     }
 
     .status-chip{
@@ -237,17 +252,17 @@
     }
 
     .chip-good{
-      background:rgba(34,197,94,0.15);
+      background:rgba(34,197,94,0.12);
       color:var(--good);
     }
 
     .chip-warn{
-      background:rgba(245,158,11,0.15);
+      background:rgba(245,158,11,0.14);
       color:var(--warn);
     }
 
     .chip-bad{
-      background:rgba(239,68,68,0.15);
+      background:rgba(239,68,68,0.12);
       color:var(--bad);
     }
 
@@ -851,7 +866,7 @@
       destroyCharts();
 
       const pointColors = results.volumeActual.map((value, index) => {
-        return value >= results.volumeForecast[index] * 1.10 ? "#ef4444" : "#38bdf8";
+        return value >= results.volumeForecast[index] * 1.10 ? "#dc2626" : "#2c7be5";
       });
 
       volumeChart = new Chart(document.getElementById("volumeChart"), {
@@ -862,16 +877,16 @@
             {
               label: "Forecast Volume",
               data: results.volumeForecast,
-              borderColor: "#8b5cf6",
-              backgroundColor: "rgba(139,92,246,0.15)",
+              borderColor: "#60a5fa",
+              backgroundColor: "rgba(96,165,250,0.12)",
               tension: 0.25,
               pointRadius: 2
             },
             {
               label: "Actual Volume",
               data: results.volumeActual,
-              borderColor: "#38bdf8",
-              backgroundColor: "rgba(56,189,248,0.15)",
+              borderColor: "#2c7be5",
+              backgroundColor: "rgba(44,123,229,0.12)",
               pointBackgroundColor: pointColors,
               tension: 0.25,
               pointRadius: 3
@@ -889,13 +904,13 @@
             {
               label: "Required HC",
               data: results.requiredHC,
-              backgroundColor: "rgba(139,92,246,0.75)"
+              backgroundColor: "rgba(96,165,250,0.85)"
             },
             {
               label: "Actual HC",
               data: results.actualHC,
               backgroundColor: results.actualHC.map((v, i) =>
-                v < results.requiredHC[i] ? "rgba(239,68,68,0.85)" : "rgba(34,197,94,0.8)"
+                v < results.requiredHC[i] ? "rgba(220,38,38,0.85)" : "rgba(22,163,74,0.8)"
               )
             }
           ]
@@ -911,8 +926,8 @@
             {
               label: "Actual SLA",
               data: results.actualSLA,
-              borderColor: "#22c55e",
-              backgroundColor: "rgba(34,197,94,0.15)",
+              borderColor: "#16a34a",
+              backgroundColor: "rgba(22,163,74,0.12)",
               yAxisID: "y",
               tension: 0.2,
               pointRadius: 2
@@ -929,8 +944,8 @@
             {
               label: "Actual AHT",
               data: results.actualAHT,
-              borderColor: "#f59e0b",
-              backgroundColor: "rgba(245,158,11,0.15)",
+              borderColor: "#d97706",
+              backgroundColor: "rgba(217,119,6,0.12)",
               yAxisID: "y1",
               tension: 0.2,
               pointRadius: 2
@@ -938,7 +953,7 @@
             {
               label: "Target AHT",
               data: results.targetAHT,
-              borderColor: "#fde68a",
+              borderColor: "#fbbf24",
               borderDash: [6,4],
               yAxisID: "y1",
               tension: 0,
@@ -956,19 +971,19 @@
           plugins: {
             legend: {
               labels: {
-                color: "#e5e7eb"
+                color: "#111827"
               }
             }
           },
           scales: {
             x: {
               ticks: {
-                color: "#cbd5e1",
+                color: "#334155",
                 maxRotation: 0,
                 autoSkip: true
               },
               grid: {
-                color: "rgba(148,163,184,0.12)"
+                color: "rgba(100,116,139,0.12)"
               }
             },
             y: {
@@ -976,13 +991,13 @@
               title: {
                 display: true,
                 text: "SLA %",
-                color: "#cbd5e1"
+                color: "#334155"
               },
               ticks: {
-                color: "#cbd5e1"
+                color: "#334155"
               },
               grid: {
-                color: "rgba(148,163,184,0.12)"
+                color: "rgba(100,116,139,0.12)"
               }
             },
             y1: {
@@ -990,10 +1005,10 @@
               title: {
                 display: true,
                 text: "AHT (sec)",
-                color: "#cbd5e1"
+                color: "#334155"
               },
               ticks: {
-                color: "#cbd5e1"
+                color: "#334155"
               },
               grid: {
                 drawOnChartArea: false
@@ -1015,32 +1030,32 @@
         plugins: {
           legend: {
             labels: {
-              color: "#e5e7eb"
+              color: "#111827"
             }
           }
         },
         scales: {
           x: {
             ticks: {
-              color: "#cbd5e1",
+              color: "#334155",
               maxRotation: 0,
               autoSkip: true
             },
             grid: {
-              color: "rgba(148,163,184,0.12)"
+              color: "rgba(100,116,139,0.12)"
             }
           },
           y: {
             title: {
               display: true,
               text: yTitle,
-              color: "#cbd5e1"
+              color: "#334155"
             },
             ticks: {
-              color: "#cbd5e1"
+              color: "#334155"
             },
             grid: {
-              color: "rgba(148,163,184,0.12)"
+              color: "rgba(100,116,139,0.12)"
             }
           }
         }

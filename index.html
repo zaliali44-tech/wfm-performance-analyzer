@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WFM Performance Analyzer</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --panel-2:#1f2937;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --line:#334155;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --accent:#38bdf8;
+      --accent2:#8b5cf6;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#0b1220 0%, #111827 100%);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1400px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .page-title{
+      margin-bottom:20px;
+    }
+
+    .page-title h1{
+      margin:0 0 8px 0;
+      font-size:30px;
+    }
+
+    .page-title p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .panel{
+      background:rgba(17,24,39,0.95);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:18px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .panel h2, .panel h3{
+      margin-top:0;
+      margin-bottom:10px;
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .upload-grid{
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    input[type="file"]{
+      display:none;
+    }
+
+    .btn, .file-label{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:14px;
+      background:#1e293b;
+      color:#fff;
+      border:1px solid #475569;
+      transition:0.2s ease;
+      text-decoration:none;
+      display:inline-block;
+    }
+
+    .btn:hover, .file-label:hover{
+      transform:translateY(-1px);
+      background:#243244;
+    }
+
+    .btn-primary{
+      background:linear-gradient(90deg,#0ea5e9,#8b5cf6);
+      border:none;
+    }
+
+    .validation-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .mini-card{
+      background:#0b1220;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .mini-card .value{
+      font-size:22px;
+      font-weight:700;
+      margin-top:8px;
+    }
+
+    .kpi-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .kpi-card{
+      background:linear-gradient(180deg,#111827,#0f172a);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+    }
+
+    .kpi-card .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .kpi-card .value{
+      font-size:28px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .good{color:var(--good)}
+    .warn{color:var(--warn)}
+    .bad{color:var(--bad)}
+
+    .charts-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .chart-panel.full{
+      grid-column:1 / -1;
+    }
+
+    canvas{
+      width:100% !important;
+      height:360px !important;
+      background:#0b1220;
+      border-radius:12px;
+      padding:10px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .summary-box{
+      line-height:1.7;
+      white-space:pre-wrap;
+      color:#dbe2ea;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      max-height:480px;
+      border:1px solid var(--line);
+      border-radius:12px;
+    }
+
+    table{
+      width:100%;
+      min-width:1200px;
+      border-collapse:collapse;
+    }
+
+    th, td{
+      padding:11px 12px;
+      border-bottom:1px solid #253043;
+      text-align:left;
+      vertical-align:top;
+      font-size:13px;
+    }
+
+    thead th{
+      position:sticky;
+      top:0;
+      background:#0b1220;
+      z-index:2;
+    }
+
+    tr:hover td{
+      background:rgba(30,41,59,0.25);
+    }
+
+    .status-chip{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .chip-good{
+      background:rgba(34,197,94,0.15);
+      color:var(--good);
+    }
+
+    .chip-warn{
+      background:rgba(245,158,11,0.15);
+      color:var(--warn);
+    }
+
+    .chip-bad{
+      background:rgba(239,68,68,0.15);
+      color:var(--bad);
+    }
+
+    @media (max-width:1100px){
+      .upload-grid,
+      .charts-grid,
+      .validation-grid,
+      .kpi-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="page-title">
+      <h1>WFM Performance Analyzer</h1>
+      <p>
+        Upload interval CSV data and generate validation checks, KPI summary cards,
+        Lean Six Sigma-style visuals, SLA breach diagnostics, RCA, and action plans.
+      </p>
+    </div>
+
+    <div class="upload-grid">
+      <div class="panel">
+        <h2>Upload Data</h2>
+        <div class="small">
+          Required columns: Date, Interval, Queue, Forecast Volume, Actual Volume, Answered, Abandoned,
+          Required HC, Scheduled HC, Actual HC, Actual AHT, Target AHT, Actual SLA, Target SLA
+        </div>
+
+        <div class="btn-row">
+          <label for="csvFile" class="file-label btn-primary">Choose CSV</label>
+          <input type="file" id="csvFile" accept=".csv" />
+          <button class="btn" id="analyzeBtn">Analyze CSV</button>
+          <button class="btn" id="sampleBtn">Download Sample CSV</button>
+        </div>
+
+        <div id="fileName" class="small" style="margin-top:12px;">No file selected</div>
+        <div id="validationMessage" class="small" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Data Validation</h2>
+        <div class="small">Quick checks before analysis starts.</div>
+
+        <div class="validation-grid">
+          <div class="mini-card">
+            <div class="small">Rows Loaded</div>
+            <div id="rowsLoaded" class="value">0</div>
+          </div>
+          <div class="mini-card">
+            <div class="small">Queues Found</div>
+            <div id="queuesFound" class="value">0</div>
+          </div>
+          <div class="mini-card">
+            <div class="small">Date Range</div>
+            <div id="dateRange" class="value" style="font-size:15px;">-</div>
+          </div>
+          <div class="mini-card">
+            <div class="small">Missing Columns</div>
+            <div id="missingColumns" class="value" style="font-size:15px;">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">Forecast Accuracy</div>
+        <div class="value" id="kpiForecast">-</div>
+        <div class="small" id="kpiForecastMeta">Waiting for file</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="label">SLA Achievement</div>
+        <div class="value" id="kpiSLA">-</div>
+        <div class="small" id="kpiSLAMeta">Waiting for file</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="label">Peak Staffing Gap</div>
+        <div class="value" id="kpiGap">-</div>
+        <div class="small" id="kpiGapMeta">Waiting for file</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="label">AHT Deviation</div>
+        <div class="value" id="kpiAHT">-</div>
+        <div class="small" id="kpiAHTMeta">Waiting for file</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="label">Breach Intervals</div>
+        <div class="value" id="kpiBreaches">-</div>
+        <div class="small" id="kpiBreachesMeta">Waiting for file</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="panel">
+        <div class="section-head">
+          <h3>Forecast vs Actual Volume</h3>
+          <button class="btn" onclick="downloadChart('volumeChart','forecast-vs-actual-volume.png')">Download PNG</button>
+        </div>
+        <canvas id="volumeChart"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <h3>Staffing Gap Analysis</h3>
+          <button class="btn" onclick="downloadChart('staffingChart','staffing-gap-analysis.png')">Download PNG</button>
+        </div>
+        <canvas id="staffingChart"></canvas>
+      </div>
+
+      <div class="panel chart-panel full">
+        <div class="section-head">
+          <h3>SLA & AHT Performance</h3>
+          <button class="btn" onclick="downloadChart('slaAhtChart','sla-aht-performance.png')">Download PNG</button>
+        </div>
+        <canvas id="slaAhtChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="section-head">
+        <h2>Executive Summary</h2>
+      </div>
+      <div id="executiveSummary" class="summary-box">Upload a CSV to generate the summary.</div>
+    </div>
+
+    <div class="panel">
+      <div class="section-head">
+        <h2>SLA Breach Analyzer</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table id="breachTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Interval</th>
+              <th>Queue</th>
+              <th>Status</th>
+              <th>Actual SLA</th>
+              <th>Target SLA</th>
+              <th>Issue</th>
+              <th>Root Cause</th>
+              <th>Recommended Action</th>
+              <th>Forecast Accuracy</th>
+              <th>Staffing Gap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="11" class="small">No analysis yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const REQUIRED_COLUMNS = [
+      "Date","Interval","Queue","Forecast Volume","Actual Volume","Answered","Abandoned",
+      "Required HC","Scheduled HC","Actual HC","Actual AHT","Target AHT","Actual SLA","Target SLA"
+    ];
+
+    const THRESHOLDS = {
+      volumeSpikePct: 10,
+      ahtSpikePct: 10,
+      forecastConcernPct: 90
+    };
+
+    let parsedData = [];
+    let volumeChart = null;
+    let staffingChart = null;
+    let slaAhtChart = null;
+
+    document.getElementById("csvFile").addEventListener("change", function(e){
+      const file = e.target.files[0];
+      document.getElementById("fileName").textContent = file ? `Selected file: ${file.name}` : "No file selected";
+    });
+
+    document.getElementById("sampleBtn").addEventListener("click", downloadSampleCSV);
+    document.getElementById("analyzeBtn").addEventListener("click", analyzeCSV);
+
+    async function analyzeCSV(){
+      const fileInput = document.getElementById("csvFile");
+      const file = fileInput.files[0];
+
+      if(!file){
+        setValidationMessage("Please select a CSV file first.", "bad");
+        return;
+      }
+
+      const text = await file.text();
+      const parsed = parseCSV(text);
+      const headers = parsed.headers;
+      const rows = parsed.rows;
+
+      const missing = REQUIRED_COLUMNS.filter(col => !headers.includes(col));
+      updateValidationSummary(rows, missing);
+
+      if(missing.length > 0){
+        setValidationMessage("Missing required columns: " + missing.join(", "), "bad");
+        return;
+      }
+
+      parsedData = normalizeRows(rows);
+
+      if(parsedData.length === 0){
+        setValidationMessage("No valid rows found in the CSV.", "bad");
+        return;
+      }
+
+      setValidationMessage("CSV loaded successfully. Analysis complete.", "good");
+
+      const results = runAnalysis(parsedData);
+      renderKPIs(results.kpis);
+      renderExecutiveSummary(results.summaryText);
+      renderBreachTable(results.breachRows);
+      renderCharts(results);
+    }
+
+    function setValidationMessage(message, type){
+      const el = document.getElementById("validationMessage");
+      el.textContent = message;
+      el.className = "small " + (type || "");
+    }
+
+    function parseCSV(text){
+      const lines = text.replace(/\r/g, "").split("\n").filter(line => line.trim() !== "");
+      if(lines.length === 0){
+        return { headers: [], rows: [] };
+      }
+
+      const headers = splitCSVLine(lines[0]).map(item => item.trim());
+      const rows = [];
+
+      for(let i = 1; i < lines.length; i++){
+        const values = splitCSVLine(lines[i]);
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = (values[index] || "").trim();
+        });
+        rows.push(row);
+      }
+
+      return { headers, rows };
+    }
+
+    function splitCSVLine(line){
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+
+      for(let i = 0; i < line.length; i++){
+        const char = line[i];
+
+        if(char === '"'){
+          if(inQuotes && line[i + 1] === '"'){
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if(char === "," && !inQuotes){
+          result.push(current);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function normalizeRows(rows){
+      return rows.map(row => ({
+        date: row["Date"],
+        interval: row["Interval"],
+        queue: row["Queue"] || "Unknown",
+        forecastVolume: toNumber(row["Forecast Volume"]),
+        actualVolume: toNumber(row["Actual Volume"]),
+        answered: toNumber(row["Answered"]),
+        abandoned: toNumber(row["Abandoned"]),
+        requiredHC: toNumber(row["Required HC"]),
+        scheduledHC: toNumber(row["Scheduled HC"]),
+        actualHC: toNumber(row["Actual HC"]),
+        actualAHT: toNumber(row["Actual AHT"]),
+        targetAHT: toNumber(row["Target AHT"]),
+        actualSLA: toNumber(row["Actual SLA"]),
+        targetSLA: toNumber(row["Target SLA"])
+      })).filter(row => row.date && row.interval);
+    }
+
+    function toNumber(value){
+      const cleaned = String(value || "").replace(/%/g, "").replace(/,/g, "").trim();
+      const num = Number(cleaned);
+      return Number.isFinite(num) ? num : 0;
+    }
+
+    function updateValidationSummary(rows, missing){
+      document.getElementById("rowsLoaded").textContent = rows.length;
+
+      const queues = new Set(rows.map(r => r["Queue"]).filter(Boolean));
+      document.getElementById("queuesFound").textContent = queues.size;
+
+      const dates = rows.map(r => r["Date"]).filter(Boolean).sort();
+      document.getElementById("dateRange").textContent = dates.length ? `${dates[0]} to ${dates[dates.length - 1]}` : "-";
+
+      document.getElementById("missingColumns").textContent = missing.length;
+    }
+
+    function runAnalysis(data){
+      const labels = data.map(r => `${r.date} ${r.interval}`);
+
+      const totalForecast = sum(data.map(r => r.forecastVolume));
+      const totalActual = sum(data.map(r => r.actualVolume));
+
+      const forecastAccuracy = totalActual === 0
+        ? 0
+        : 100 - (Math.abs(totalActual - totalForecast) / totalActual * 100);
+
+      const weightedSLA = weightedAverage(
+        data.map(r => ({
+          value: r.actualSLA,
+          weight: Math.max(r.answered, 1)
+        }))
+      );
+
+      const avgTargetSLA = average(data.map(r => r.targetSLA));
+      const avgActualAHT = average(data.map(r => r.actualAHT));
+      const avgTargetAHT = average(data.map(r => r.targetAHT));
+      const ahtDeviation = avgActualAHT - avgTargetAHT;
+
+      let breachCount = 0;
+      let worstGap = 0;
+      let worstGapLabel = "-";
+
+      const breachRows = [];
+      const volumeSpikeIntervals = [];
+      const ahtSpikeIntervals = [];
+      const staffingGapIntervals = [];
+      const queueStats = {};
+
+      data.forEach(r => {
+        const rowForecastAccuracy = r.actualVolume === 0
+          ? 0
+          : 100 - (Math.abs(r.actualVolume - r.forecastVolume) / r.actualVolume * 100);
+
+        const staffingGap = r.actualHC - r.requiredHC;
+        const volumeSpike = r.actualVolume >= r.forecastVolume * 1.10;
+        const ahtSpike = r.actualAHT >= r.targetAHT * 1.10;
+        const hcGap = r.actualHC < r.requiredHC;
+        const slaBreach = r.actualSLA < r.targetSLA;
+        const forecastConcern = rowForecastAccuracy < THRESHOLDS.forecastConcernPct;
+
+        if(staffingGap < worstGap){
+          worstGap = staffingGap;
+          worstGapLabel = `${r.date} ${r.interval}`;
+        }
+
+        if(volumeSpike) volumeSpikeIntervals.push(`${r.interval} (${r.queue})`);
+        if(ahtSpike) ahtSpikeIntervals.push(`${r.interval} (${r.queue})`);
+        if(hcGap) staffingGapIntervals.push(`${r.interval} (${r.queue})`);
+
+        if(!queueStats[r.queue]){
+          queueStats[r.queue] = { breaches: 0, total: 0 };
+        }
+
+        queueStats[r.queue].total += 1;
+        if(slaBreach) queueStats[r.queue].breaches += 1;
+
+        if(slaBreach) breachCount++;
+
+        const causes = [];
+        const actions = [];
+
+        if(hcGap){
+          causes.push(`Understaffed by ${Math.abs(staffingGap)} HC`);
+          actions.push("Reallocate agents from lower-risk queues or approve short-term overtime.");
+        }
+
+        if(volumeSpike){
+          causes.push(`Volume ${percentageDifference(r.actualVolume, r.forecastVolume).toFixed(1)}% above forecast`);
+          actions.push("Update intraday forecast and build a short-term staffing buffer.");
+        }
+
+        if(ahtSpike){
+          causes.push(`AHT ${percentageDifference(r.actualAHT, r.targetAHT).toFixed(1)}% above target`);
+          actions.push("Review call drivers, process blockers, and provide quick refresher coaching.");
+        }
+
+        if(forecastConcern && !volumeSpike){
+          causes.push(`Forecast accuracy low at ${rowForecastAccuracy.toFixed(1)}%`);
+          actions.push("Review forecast assumptions, inputs, and recent trend shifts.");
+        }
+
+        if(causes.length === 0){
+          causes.push("No major operational exception detected");
+          actions.push("Monitor trend and validate routing, queue mix, or system factors.");
+        }
+
+        let issue = "Within Target";
+        let statusClass = "chip-good";
+
+        if(slaBreach){
+          issue = "SLA Breach";
+          statusClass = "chip-bad";
+        } else if(hcGap || volumeSpike || ahtSpike){
+          issue = "Operational Risk";
+          statusClass = "chip-warn";
+        }
+
+        breachRows.push({
+          date: r.date,
+          interval: r.interval,
+          queue: r.queue,
+          issue,
+          statusClass,
+          actualSLA: r.actualSLA,
+          targetSLA: r.targetSLA,
+          rootCause: causes.join(" | "),
+          action: unique(actions).join(" "),
+          forecastAccuracy: rowForecastAccuracy,
+          staffingGap: staffingGap
+        });
+      });
+
+      breachRows.sort((a, b) => severityScore(b) - severityScore(a));
+
+      const topQueue = Object.entries(queueStats).sort((a, b) => {
+        const aRate = a[1].total === 0 ? 0 : a[1].breaches / a[1].total;
+        const bRate = b[1].total === 0 ? 0 : b[1].breaches / b[1].total;
+        return bRate - aRate;
+      })[0];
+
+      const summaryText = buildExecutiveSummary({
+        forecastAccuracy,
+        weightedSLA,
+        avgTargetSLA,
+        breachCount,
+        totalIntervals: data.length,
+        worstGap,
+        worstGapLabel,
+        ahtDeviation,
+        volumeSpikeIntervals,
+        ahtSpikeIntervals,
+        staffingGapIntervals,
+        topQueue
+      });
+
+      return {
+        labels,
+        volumeForecast: data.map(r => r.forecastVolume),
+        volumeActual: data.map(r => r.actualVolume),
+        requiredHC: data.map(r => r.requiredHC),
+        actualHC: data.map(r => r.actualHC),
+        actualSLA: data.map(r => r.actualSLA),
+        targetSLA: data.map(r => r.targetSLA),
+        actualAHT: data.map(r => r.actualAHT),
+        targetAHT: data.map(r => r.targetAHT),
+        breachRows,
+        summaryText,
+        kpis: {
+          forecastAccuracy,
+          weightedSLA,
+          avgTargetSLA,
+          worstGap,
+          worstGapLabel,
+          ahtDeviation,
+          avgActualAHT,
+          avgTargetAHT,
+          breachCount,
+          totalIntervals: data.length
+        }
+      };
+    }
+
+    function buildExecutiveSummary(data){
+      const lines = [];
+
+      lines.push(
+        `Overall forecast accuracy was ${data.forecastAccuracy.toFixed(1)}%, and weighted SLA closed at ${data.weightedSLA.toFixed(1)}% against an average target of ${data.avgTargetSLA.toFixed(1)}%.`
+      );
+
+      if(data.breachCount > 0){
+        lines.push(
+          `${data.breachCount} out of ${data.totalIntervals} intervals missed SLA. The largest staffing shortage was ${data.worstGap} HC at ${data.worstGapLabel}. Average AHT deviation was ${formatSigned(data.ahtDeviation)} sec versus target.`
+        );
+      } else {
+        lines.push("No SLA breach intervals were detected in the uploaded data.");
+      }
+
+      if(data.staffingGapIntervals.length){
+        lines.push(
+          `Staffing pressure was observed in: ${data.staffingGapIntervals.slice(0,5).join(", ")}${data.staffingGapIntervals.length > 5 ? "..." : ""}`
+        );
+      }
+
+      if(data.volumeSpikeIntervals.length){
+        lines.push(
+          `Demand spikes were observed in: ${data.volumeSpikeIntervals.slice(0,5).join(", ")}${data.volumeSpikeIntervals.length > 5 ? "..." : ""}`
+        );
+      }
+
+      if(data.ahtSpikeIntervals.length){
+        lines.push(
+          `AHT pressure was observed in: ${data.ahtSpikeIntervals.slice(0,5).join(", ")}${data.ahtSpikeIntervals.length > 5 ? "..." : ""}`
+        );
+      }
+
+      if(data.topQueue){
+        const rate = data.topQueue[1].total === 0 ? 0 : (data.topQueue[1].breaches / data.topQueue[1].total) * 100;
+        lines.push(`Queue with highest breach concentration: ${data.topQueue[0]} at ${rate.toFixed(1)}% of intervals below target.`);
+      }
+
+      lines.push(
+        "Recommended focus: tighten intraday staffing response where HC gaps repeat, recalibrate forecast assumptions when volume exceeds plan by 10%+, and review process or knowledge issues whenever AHT stays 10% above target."
+      );
+
+      return lines.join("\n\n");
+    }
+
+    function renderKPIs(kpis){
+      setKPI("kpiForecast", "kpiForecastMeta",
+        `${kpis.forecastAccuracy.toFixed(1)}%`,
+        getForecastClass(kpis.forecastAccuracy),
+        kpis.forecastAccuracy < 90 ? "Below threshold" : "Within acceptable range"
+      );
+
+      setKPI("kpiSLA", "kpiSLAMeta",
+        `${kpis.weightedSLA.toFixed(1)}%`,
+        getSLAClass(kpis.weightedSLA, kpis.avgTargetSLA),
+        `Target avg ${kpis.avgTargetSLA.toFixed(1)}%`
+      );
+
+      setKPI("kpiGap", "kpiGapMeta",
+        `${kpis.worstGap} HC`,
+        getGapClass(kpis.worstGap),
+        kpis.worstGapLabel
+      );
+
+      setKPI("kpiAHT", "kpiAHTMeta",
+        `${formatSigned(kpis.ahtDeviation)} sec`,
+        getAHTClass(kpis.ahtDeviation, kpis.avgTargetAHT),
+        `Avg ${kpis.avgActualAHT.toFixed(1)} sec vs target ${kpis.avgTargetAHT.toFixed(1)} sec`
+      );
+
+      setKPI("kpiBreaches", "kpiBreachesMeta",
+        `${kpis.breachCount}`,
+        getBreachClass(kpis.breachCount, kpis.totalIntervals),
+        `${kpis.totalIntervals} total intervals`
+      );
+    }
+
+    function setKPI(valueId, metaId, valueText, colorClass, metaText){
+      const valueEl = document.getElementById(valueId);
+      valueEl.textContent = valueText;
+      valueEl.className = `value ${colorClass}`;
+      document.getElementById(metaId).textContent = metaText;
+    }
+
+    function renderExecutiveSummary(summary){
+      document.getElementById("executiveSummary").textContent = summary;
+    }
+
+    function renderBreachTable(rows){
+      const tbody = document.querySelector("#breachTable tbody");
+
+      if(rows.length === 0){
+        tbody.innerHTML = `<tr><td colspan="11" class="small">No rows to display.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.date)}</td>
+          <td>${escapeHtml(row.interval)}</td>
+          <td>${escapeHtml(row.queue)}</td>
+          <td><span class="status-chip ${row.statusClass}">${escapeHtml(row.issue)}</span></td>
+          <td>${row.actualSLA.toFixed(1)}%</td>
+          <td>${row.targetSLA.toFixed(1)}%</td>
+          <td>${escapeHtml(row.issue)}</td>
+          <td>${escapeHtml(row.rootCause)}</td>
+          <td>${escapeHtml(row.action)}</td>
+          <td>${row.forecastAccuracy.toFixed(1)}%</td>
+          <td>${formatSigned(row.staffingGap)} HC</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderCharts(results){
+      destroyCharts();
+
+      const pointColors = results.volumeActual.map((value, index) => {
+        return value >= results.volumeForecast[index] * 1.10 ? "#ef4444" : "#38bdf8";
+      });
+
+      volumeChart = new Chart(document.getElementById("volumeChart"), {
+        type: "line",
+        data: {
+          labels: results.labels,
+          datasets: [
+            {
+              label: "Forecast Volume",
+              data: results.volumeForecast,
+              borderColor: "#8b5cf6",
+              backgroundColor: "rgba(139,92,246,0.15)",
+              tension: 0.25,
+              pointRadius: 2
+            },
+            {
+              label: "Actual Volume",
+              data: results.volumeActual,
+              borderColor: "#38bdf8",
+              backgroundColor: "rgba(56,189,248,0.15)",
+              pointBackgroundColor: pointColors,
+              tension: 0.25,
+              pointRadius: 3
+            }
+          ]
+        },
+        options: buildChartOptions("Volume")
+      });
+
+      staffingChart = new Chart(document.getElementById("staffingChart"), {
+        type: "bar",
+        data: {
+          labels: results.labels,
+          datasets: [
+            {
+              label: "Required HC",
+              data: results.requiredHC,
+              backgroundColor: "rgba(139,92,246,0.75)"
+            },
+            {
+              label: "Actual HC",
+              data: results.actualHC,
+              backgroundColor: results.actualHC.map((v, i) =>
+                v < results.requiredHC[i] ? "rgba(239,68,68,0.85)" : "rgba(34,197,94,0.8)"
+              )
+            }
+          ]
+        },
+        options: buildChartOptions("Headcount")
+      });
+
+      slaAhtChart = new Chart(document.getElementById("slaAhtChart"), {
+        type: "line",
+        data: {
+          labels: results.labels,
+          datasets: [
+            {
+              label: "Actual SLA",
+              data: results.actualSLA,
+              borderColor: "#22c55e",
+              backgroundColor: "rgba(34,197,94,0.15)",
+              yAxisID: "y",
+              tension: 0.2,
+              pointRadius: 2
+            },
+            {
+              label: "Target SLA",
+              data: results.targetSLA,
+              borderColor: "#86efac",
+              borderDash: [6,4],
+              yAxisID: "y",
+              tension: 0,
+              pointRadius: 0
+            },
+            {
+              label: "Actual AHT",
+              data: results.actualAHT,
+              borderColor: "#f59e0b",
+              backgroundColor: "rgba(245,158,11,0.15)",
+              yAxisID: "y1",
+              tension: 0.2,
+              pointRadius: 2
+            },
+            {
+              label: "Target AHT",
+              data: results.targetAHT,
+              borderColor: "#fde68a",
+              borderDash: [6,4],
+              yAxisID: "y1",
+              tension: 0,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: "index",
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: "#e5e7eb"
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#cbd5e1",
+                maxRotation: 0,
+                autoSkip: true
+              },
+              grid: {
+                color: "rgba(148,163,184,0.12)"
+              }
+            },
+            y: {
+              position: "left",
+              title: {
+                display: true,
+                text: "SLA %",
+                color: "#cbd5e1"
+              },
+              ticks: {
+                color: "#cbd5e1"
+              },
+              grid: {
+                color: "rgba(148,163,184,0.12)"
+              }
+            },
+            y1: {
+              position: "right",
+              title: {
+                display: true,
+                text: "AHT (sec)",
+                color: "#cbd5e1"
+              },
+              ticks: {
+                color: "#cbd5e1"
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function buildChartOptions(yTitle){
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: "#e5e7eb"
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: "#cbd5e1",
+              maxRotation: 0,
+              autoSkip: true
+            },
+            grid: {
+              color: "rgba(148,163,184,0.12)"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: yTitle,
+              color: "#cbd5e1"
+            },
+            ticks: {
+              color: "#cbd5e1"
+            },
+            grid: {
+              color: "rgba(148,163,184,0.12)"
+            }
+          }
+        }
+      };
+    }
+
+    function destroyCharts(){
+      if(volumeChart) volumeChart.destroy();
+      if(staffingChart) staffingChart.destroy();
+      if(slaAhtChart) slaAhtChart.destroy();
+    }
+
+    function downloadChart(canvasId, fileName){
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = canvas.toDataURL("image/png", 1.0);
+      link.click();
+    }
+
+    function downloadSampleCSV(){
+      const sampleRows = [
+        ["Date","Interval","Queue","Forecast Volume","Actual Volume","Answered","Abandoned","Required HC","Scheduled HC","Actual HC","Actual AHT","Target AHT","Actual SLA","Target SLA"],
+        ["2026-03-01","09:00","Billing","120","135","126","9","20","19","18","540","500","76","80"],
+        ["2026-03-01","09:30","Billing","140","150","140","10","22","21","20","560","500","74","80"],
+        ["2026-03-01","10:00","Support","160","158","150","8","24","24","23","520","500","82","80"],
+        ["2026-03-01","10:30","Support","170","180","165","15","26","25","24","590","500","72","80"]
+      ];
+
+      const csvContent = sampleRows.map(row => row.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "wfm-performance-analyzer-sample.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function severityScore(row){
+      let score = 0;
+      if(row.issue === "SLA Breach") score += 10;
+      if(row.rootCause.includes("Understaffed")) score += 4;
+      if(row.rootCause.includes("Volume")) score += 3;
+      if(row.rootCause.includes("AHT")) score += 3;
+      return score;
+    }
+
+    function sum(arr){
+      return arr.reduce((total, value) => total + Number(value || 0), 0);
+    }
+
+    function average(arr){
+      return arr.length ? sum(arr) / arr.length : 0;
+    }
+
+    function weightedAverage(items){
+      const totalWeight = items.reduce((sum, item) => sum + (item.weight || 0), 0);
+      if(totalWeight === 0) return 0;
+      return items.reduce((sum, item) => sum + ((item.value || 0) * (item.weight || 0)), 0) / totalWeight;
+    }
+
+    function percentageDifference(actual, base){
+      if(base === 0) return 0;
+      return ((actual - base) / base) * 100;
+    }
+
+    function unique(arr){
+      return [...new Set(arr)];
+    }
+
+    function formatSigned(value){
+      return `${value > 0 ? "+" : ""}${Number(value).toFixed(1)}`;
+    }
+
+    function getForecastClass(value){
+      if(value >= 95) return "good";
+      if(value >= 90) return "warn";
+      return "bad";
+    }
+
+    function getSLAClass(value, target){
+      if(value >= target) return "good";
+      if(value >= target - 3) return "warn";
+      return "bad";
+    }
+
+    function getGapClass(value){
+      if(value >= 0) return "good";
+      if(value >= -2) return "warn";
+      return "bad";
+    }
+
+    function getAHTClass(deviation, target){
+      if(target === 0) return "good";
+      const pct = (deviation / target) * 100;
+      if(pct <= 5) return "good";
+      if(pct <= 10) return "warn";
+      return "bad";
+    }
+
+    function getBreachClass(breaches, total){
+      if(total === 0) return "good";
+      const ratio = breaches / total;
+      if(ratio <= 0.10) return "good";
+      if(ratio <= 0.25) return "warn";
+      return "bad";
+    }
+
+    function escapeHtml(text){
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

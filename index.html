@@ -7,65 +7,86 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root{
-      --bg:#f4f7fb;
-      --panel:#ffffff;
-      --panel-2:#eef6ff;
-      --text:#111827;
-      --muted:#64748b;
-      --line:#dbe4f0;
-      --good:#16a34a;
-      --warn:#d97706;
-      --bad:#dc2626;
-      --accent:#2c7be5;
+      --bg:#020816;
+      --bg-2:#06132a;
+      --panel:#071326;
+      --panel-2:#09182f;
+      --text:#f4f8ff;
+      --muted:#a8bfdc;
+      --line:rgba(57,110,201,.28);
+      --good:#36e39c;
+      --warn:#ffbf47;
+      --bad:#ff6b7a;
+      --accent:#15e6ff;
       --accent2:#60a5fa;
-      --table-head:#eef2f7;
-      --canvas-bg:#f8fbff;
+      --table-head:rgba(10,23,44,.92);
+      --canvas-bg:rgba(7,17,34,.45);
+      --shadow:0 10px 30px rgba(0,0,0,.34);
+      --glow:0 0 0 1px rgba(21,230,255,.12), 0 0 24px rgba(21,230,255,.08);
     }
 
     *{box-sizing:border-box}
 
-    body{
+    html, body{
       margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
+      padding:0;
+      font-family:Inter, Arial, Helvetica, sans-serif;
       color:var(--text);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(32,110,255,.18), transparent 28%),
+        radial-gradient(circle at 78% 10%, rgba(21,230,255,.14), transparent 24%),
+        linear-gradient(180deg, #031022 0%, #020816 44%, #01050f 100%);
+      background-attachment:fixed;
+    }
+
+    body{
+      padding:6px;
+      overflow-x:hidden;
     }
 
     .container{
-      max-width:1400px;
-      margin:0 auto;
-      padding:24px;
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:10px 10px 18px;
     }
 
     .page-title{
-      margin-bottom:20px;
+      margin-bottom:16px;
+      text-align:center;
     }
 
     .page-title h1{
       margin:0 0 8px 0;
-      font-size:30px;
-      color:var(--text);
+      font-size:clamp(24px, 3.5vw, 44px);
+      color:#ffffff;
+      font-weight:800;
+      letter-spacing:-0.03em;
+      text-shadow:0 0 18px rgba(21,230,255,.12);
     }
 
     .page-title p{
-      margin:0;
+      margin:0 auto;
       color:var(--muted);
-      line-height:1.5;
+      line-height:1.6;
+      max-width:920px;
     }
 
     .panel{
-      background:var(--panel);
+      background:linear-gradient(180deg, rgba(8,20,40,.96) 0%, rgba(5,14,28,.96) 100%);
       border:1px solid var(--line);
       border-radius:16px;
       padding:18px;
       margin-bottom:18px;
-      box-shadow:0 3px 10px rgba(0,0,0,0.08);
+      box-shadow:var(--shadow), var(--glow);
+      backdrop-filter:blur(10px) saturate(1.06);
+      -webkit-backdrop-filter:blur(10px) saturate(1.06);
     }
 
     .panel h2, .panel h3{
       margin-top:0;
       margin-bottom:10px;
-      color:var(--text);
+      color:#ffffff;
     }
 
     .small{
@@ -92,32 +113,37 @@
     }
 
     .btn, .file-label{
-      border:none;
-      border-radius:8px;
+      border-radius:999px;
       padding:10px 14px;
       cursor:pointer;
-      font-size:14px;
-      background:#ffffff;
-      color:var(--accent);
-      border:1px solid var(--line);
+      font-size:12px;
+      font-weight:800;
       transition:0.2s ease;
       text-decoration:none;
       display:inline-block;
+      border:1px solid rgba(76,137,232,.4);
+      background:rgba(9,21,42,.78);
+      color:#ffffff;
+      box-shadow:0 0 0 1px rgba(79,144,255,.08), inset 0 0 0 1px rgba(255,255,255,.02);
     }
 
     .btn:hover, .file-label:hover{
       transform:translateY(-1px);
-      background:#f0f6ff;
+      background:rgba(11,27,52,.9);
+      border-color:rgba(21,230,255,.42);
+      box-shadow:0 0 0 1px rgba(21,230,255,.14), 0 0 18px rgba(21,230,255,.1);
     }
 
     .btn-primary{
-      background:var(--accent);
-      color:#ffffff;
-      border:1px solid var(--accent);
+      border:1px solid rgba(21,230,255,.82);
+      background:linear-gradient(180deg, rgba(25,244,255,.95), rgba(9,201,226,.92));
+      color:#03101c;
+      box-shadow:0 0 0 1px rgba(21,230,255,.18), 0 0 18px rgba(21,230,255,.18);
     }
 
     .btn-primary:hover{
-      background:#1f6ad0;
+      background:linear-gradient(180deg, rgba(45,247,255,.98), rgba(13,216,237,.95));
+      box-shadow:0 0 0 1px rgba(21,230,255,.3), 0 0 24px rgba(21,230,255,.26);
     }
 
     .validation-grid{
@@ -128,8 +154,8 @@
     }
 
     .mini-card{
-      background:var(--panel-2);
-      border:1px solid var(--line);
+      background:rgba(11,25,48,.76);
+      border:1px solid rgba(95,137,204,.22);
       border-radius:12px;
       padding:14px;
     }
@@ -138,7 +164,7 @@
       font-size:22px;
       font-weight:700;
       margin-top:8px;
-      color:var(--text);
+      color:#ffffff;
     }
 
     .kpi-grid{
@@ -149,11 +175,11 @@
     }
 
     .kpi-card{
-      background:var(--panel);
+      background:linear-gradient(180deg, rgba(8,20,40,.96) 0%, rgba(5,14,28,.96) 100%);
       border:1px solid var(--line);
       border-radius:14px;
       padding:16px;
-      box-shadow:0 3px 10px rgba(0,0,0,0.05);
+      box-shadow:var(--shadow), var(--glow);
     }
 
     .kpi-card .label{
@@ -166,7 +192,7 @@
       font-size:28px;
       font-weight:700;
       margin-bottom:6px;
-      color:var(--text);
+      color:#ffffff;
     }
 
     .good{color:var(--good)}
@@ -190,7 +216,7 @@
       background:var(--canvas-bg);
       border-radius:12px;
       padding:10px;
-      border:1px solid var(--line);
+      border:1px solid rgba(95,137,204,.14);
     }
 
     .section-head{
@@ -205,13 +231,13 @@
     .summary-box{
       line-height:1.7;
       white-space:pre-wrap;
-      color:var(--text);
+      color:#eaf3ff;
     }
 
     .table-wrap{
       overflow:auto;
       max-height:480px;
-      border:1px solid var(--line);
+      border:1px solid rgba(95,137,204,.18);
       border-radius:12px;
     }
 
@@ -219,16 +245,16 @@
       width:100%;
       min-width:1200px;
       border-collapse:collapse;
-      background:#fff;
+      background:rgba(7,17,34,.72);
     }
 
     th, td{
       padding:11px 12px;
-      border-bottom:1px solid var(--line);
+      border-bottom:1px solid rgba(95,137,204,.14);
       text-align:left;
       vertical-align:top;
       font-size:13px;
-      color:var(--text);
+      color:#eaf3ff;
     }
 
     thead th{
@@ -236,10 +262,14 @@
       top:0;
       background:var(--table-head);
       z-index:2;
+      color:#9db8db;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-size:11px;
     }
 
     tr:hover td{
-      background:#f8fbff;
+      background:rgba(12,29,54,.72);
     }
 
     .status-chip{
@@ -252,17 +282,17 @@
     }
 
     .chip-good{
-      background:rgba(34,197,94,0.12);
+      background:rgba(54,227,156,.14);
       color:var(--good);
     }
 
     .chip-warn{
-      background:rgba(245,158,11,0.14);
+      background:rgba(255,191,71,.14);
       color:var(--warn);
     }
 
     .chip-bad{
-      background:rgba(239,68,68,0.12);
+      background:rgba(255,107,122,.14);
       color:var(--bad);
     }
 
@@ -430,6 +460,9 @@
   </div>
 
   <script>
+    Chart.defaults.color = "#cfe3ff";
+    Chart.defaults.borderColor = "rgba(95,137,204,.18)";
+
     const REQUIRED_COLUMNS = [
       "Date","Interval","Queue","Forecast Volume","Actual Volume","Answered","Abandoned",
       "Required HC","Scheduled HC","Actual HC","Actual AHT","Target AHT","Actual SLA","Target SLA"
@@ -866,7 +899,7 @@
       destroyCharts();
 
       const pointColors = results.volumeActual.map((value, index) => {
-        return value >= results.volumeForecast[index] * 1.10 ? "#dc2626" : "#2c7be5";
+        return value >= results.volumeForecast[index] * 1.10 ? "#ff6b7a" : "#15e6ff";
       });
 
       volumeChart = new Chart(document.getElementById("volumeChart"), {
@@ -885,8 +918,8 @@
             {
               label: "Actual Volume",
               data: results.volumeActual,
-              borderColor: "#4CAF50",
-              backgroundColor: "rgba(76,175,80,0.12",
+              borderColor: "#36e39c",
+              backgroundColor: "rgba(54,227,156,0.12)",
               pointBackgroundColor: pointColors,
               tension: 0.25,
               pointRadius: 3
@@ -910,7 +943,7 @@
               label: "Actual HC",
               data: results.actualHC,
               backgroundColor: results.actualHC.map((v, i) =>
-                v < results.requiredHC[i] ? "rgba(220,38,38,0.85)" : "rgba(22,163,74,0.8)"
+                v < results.requiredHC[i] ? "rgba(255,107,122,0.85)" : "rgba(54,227,156,0.8)"
               )
             }
           ]
@@ -926,8 +959,8 @@
             {
               label: "Actual SLA",
               data: results.actualSLA,
-              borderColor: "#16a34a",
-              backgroundColor: "rgba(22,163,74,0.12)",
+              borderColor: "#36e39c",
+              backgroundColor: "rgba(54,227,156,0.12)",
               yAxisID: "y",
               tension: 0.2,
               pointRadius: 2
@@ -935,7 +968,7 @@
             {
               label: "Target SLA",
               data: results.targetSLA,
-              borderColor: "#86efac",
+              borderColor: "#8df7c0",
               borderDash: [6,4],
               yAxisID: "y",
               tension: 0,
@@ -944,8 +977,8 @@
             {
               label: "Actual AHT",
               data: results.actualAHT,
-              borderColor: "#d97706",
-              backgroundColor: "rgba(217,119,6,0.12)",
+              borderColor: "#ffbf47",
+              backgroundColor: "rgba(255,191,71,0.12)",
               yAxisID: "y1",
               tension: 0.2,
               pointRadius: 2
@@ -953,7 +986,7 @@
             {
               label: "Target AHT",
               data: results.targetAHT,
-              borderColor: "#fbbf24",
+              borderColor: "#ffd36a",
               borderDash: [6,4],
               yAxisID: "y1",
               tension: 0,
@@ -971,19 +1004,19 @@
           plugins: {
             legend: {
               labels: {
-                color: "#111827"
+                color: "#cfe3ff"
               }
             }
           },
           scales: {
             x: {
               ticks: {
-                color: "#334155",
+                color: "#cfe3ff",
                 maxRotation: 0,
                 autoSkip: true
               },
               grid: {
-                color: "rgba(100,116,139,0.12)"
+                color: "rgba(95,137,204,.18)"
               }
             },
             y: {
@@ -991,13 +1024,13 @@
               title: {
                 display: true,
                 text: "SLA %",
-                color: "#334155"
+                color: "#cfe3ff"
               },
               ticks: {
-                color: "#334155"
+                color: "#cfe3ff"
               },
               grid: {
-                color: "rgba(100,116,139,0.12)"
+                color: "rgba(95,137,204,.18)"
               }
             },
             y1: {
@@ -1005,10 +1038,10 @@
               title: {
                 display: true,
                 text: "AHT (sec)",
-                color: "#334155"
+                color: "#cfe3ff"
               },
               ticks: {
-                color: "#334155"
+                color: "#cfe3ff"
               },
               grid: {
                 drawOnChartArea: false
@@ -1030,32 +1063,32 @@
         plugins: {
           legend: {
             labels: {
-              color: "#111827"
+              color: "#cfe3ff"
             }
           }
         },
         scales: {
           x: {
             ticks: {
-              color: "#334155",
+              color: "#cfe3ff",
               maxRotation: 0,
               autoSkip: true
             },
             grid: {
-              color: "rgba(100,116,139,0.12)"
+              color: "rgba(95,137,204,.18)"
             }
           },
           y: {
             title: {
               display: true,
               text: yTitle,
-              color: "#334155"
+              color: "#cfe3ff"
             },
             ticks: {
-              color: "#334155"
+              color: "#cfe3ff"
             },
             grid: {
-              color: "rgba(100,116,139,0.12)"
+              color: "rgba(95,137,204,.18)"
             }
           }
         }

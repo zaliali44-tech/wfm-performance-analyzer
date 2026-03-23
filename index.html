@@ -112,7 +112,7 @@
       display:none;
     }
 
-    .btn, .file-label{
+    .btn, .file-label, .tiny-btn{
       border-radius:999px;
       padding:10px 14px;
       cursor:pointer;
@@ -127,7 +127,7 @@
       box-shadow:0 0 0 1px rgba(79,144,255,.08), inset 0 0 0 1px rgba(255,255,255,.02);
     }
 
-    .btn:hover, .file-label:hover{
+    .btn:hover, .file-label:hover, .tiny-btn:hover{
       transform:translateY(-1px);
       background:rgba(11,27,52,.9);
       border-color:rgba(21,230,255,.42);
@@ -199,26 +199,6 @@
     .warn{color:var(--warn)}
     .bad{color:var(--bad)}
 
-    .charts-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      margin-bottom:18px;
-    }
-
-    .chart-panel.full{
-      grid-column:1 / -1;
-    }
-
-    canvas{
-      width:100% !important;
-      height:360px !important;
-      background:var(--canvas-bg);
-      border-radius:12px;
-      padding:10px;
-      border:1px solid rgba(95,137,204,.14);
-    }
-
     .section-head{
       display:flex;
       justify-content:space-between;
@@ -226,6 +206,13 @@
       gap:12px;
       flex-wrap:wrap;
       margin-bottom:10px;
+    }
+
+    .section-title-wrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
     }
 
     .summary-box{
@@ -236,14 +223,14 @@
 
     .table-wrap{
       overflow:auto;
-      max-height:480px;
+      max-height:520px;
       border:1px solid rgba(95,137,204,.18);
       border-radius:12px;
     }
 
     table{
       width:100%;
-      min-width:1200px;
+      min-width:1400px;
       border-collapse:collapse;
       background:rgba(7,17,34,.72);
     }
@@ -296,11 +283,282 @@
       color:var(--bad);
     }
 
-    @media (max-width:1100px){
+    .charts-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .chart-panel.full{
+      grid-column:1 / -1;
+    }
+
+    canvas{
+      width:100% !important;
+      height:340px !important;
+      background:var(--canvas-bg);
+      border-radius:12px;
+      padding:10px;
+      border:1px solid rgba(95,137,204,.14);
+    }
+
+    .insight-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .insight-card{
+      background:linear-gradient(180deg, rgba(8,20,40,.96) 0%, rgba(5,14,28,.96) 100%);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      box-shadow:var(--shadow), var(--glow);
+    }
+
+    .insight-card .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .insight-card .value{
+      font-size:24px;
+      font-weight:800;
+      margin-bottom:6px;
+      color:#ffffff;
+    }
+
+    .insight-card .meta{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .heatmap-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(95px,1fr));
+      gap:10px;
+    }
+
+    .heatmap-cell{
+      border-radius:12px;
+      border:1px solid rgba(95,137,204,.18);
+      padding:10px;
+      text-align:center;
+      min-height:72px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:6px;
+      font-size:12px;
+    }
+
+    .hm-safe{
+      background:rgba(54,227,156,.10);
+    }
+
+    .hm-watch{
+      background:rgba(255,191,71,.10);
+    }
+
+    .hm-risk{
+      background:rgba(255,107,122,.12);
+    }
+
+    .filter-row{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .filter-row label{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      color:#dce9f8;
+      font-size:13px;
+    }
+
+    .sev-high{ background:rgba(255,107,122,.14); color:var(--bad); }
+    .sev-medium{ background:rgba(255,191,71,.14); color:var(--warn); }
+    .sev-low{ background:rgba(54,227,156,.14); color:var(--good); }
+
+    .conf-high{ background:rgba(21,230,255,.14); color:var(--accent); }
+    .conf-medium{ background:rgba(255,191,71,.14); color:var(--warn); }
+    .conf-low{ background:rgba(160,170,190,.14); color:#d9e3ef; }
+
+    .whatif-grid{
+      display:grid;
+      grid-template-columns:1fr 2fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .control-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .control-card{
+      background:rgba(11,25,48,.76);
+      border:1px solid rgba(95,137,204,.22);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .control-card label{
+      display:block;
+      margin-bottom:6px;
+      font-size:13px;
+      color:#eaf3ff;
+      font-weight:700;
+    }
+
+    .control-card input[type="range"]{
+      width:100%;
+    }
+
+    .control-value{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .whatif-summary{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .whatif-mini{
+      background:rgba(11,25,48,.76);
+      border:1px solid rgba(95,137,204,.22);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .whatif-mini .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .whatif-mini .value{
+      font-size:20px;
+      font-weight:800;
+    }
+
+    .glossary-toggle{
+      width:100%;
+      border-radius:14px;
+      padding:12px 14px;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:800;
+      transition:0.2s ease;
+      border:1px solid rgba(76,137,232,.4);
+      background:rgba(9,21,42,.78);
+      color:#ffffff;
+      text-align:left;
+    }
+
+    .glossary-wrap{
+      display:none;
+      margin-top:14px;
+    }
+
+    .glossary-wrap.open{
+      display:block;
+    }
+
+    .glossary-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+
+    .glossary-card{
+      background:rgba(11,25,48,.76);
+      border:1px solid rgba(95,137,204,.22);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .glossary-card h4{
+      margin:0 0 8px 0;
+      font-size:14px;
+    }
+
+    .glossary-card code{
+      display:block;
+      padding:8px 10px;
+      border-radius:10px;
+      background:rgba(3,11,24,.92);
+      border:1px solid rgba(95,137,204,.12);
+      color:#aeeeff;
+      margin-bottom:8px;
+      white-space:normal;
+      word-break:break-word;
+    }
+
+    .glossary-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:12px;
+    }
+
+    .help-tip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#34c3eb;
+      color:#05203a;
+      font-size:11px;
+      font-weight:800;
+      cursor:help;
+      position:relative;
+      flex:0 0 auto;
+    }
+
+    .help-tip:hover::after{
+      content:attr(data-tip);
+      position:absolute;
+      top:25px;
+      left:0;
+      min-width:220px;
+      max-width:280px;
+      z-index:100;
+      background:#0d2544;
+      color:#eff7ff;
+      border:1px solid rgba(126,181,255,.24);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:12px;
+      line-height:1.45;
+      box-shadow:0 10px 30px rgba(0,0,0,.28);
+      white-space:normal;
+    }
+
+    @media (max-width:1200px){
       .upload-grid,
       .charts-grid,
       .validation-grid,
-      .kpi-grid{
+      .kpi-grid,
+      .insight-grid,
+      .whatif-grid,
+      .whatif-summary,
+      .glossary-grid{
         grid-template-columns:1fr;
       }
     }
@@ -313,13 +571,20 @@
       <h1>WFM Performance Analyzer</h1>
       <p>
         Upload interval CSV data and generate validation checks, KPI summary cards,
-        Lean Six Sigma-style visuals, SLA breach diagnostics, RCA, and action plans.
+        advanced operational visuals, interval-wise RCA, action plans, what-if simulation,
+        heatmap risk views, and formula glossary.
       </p>
     </div>
 
     <div class="upload-grid">
       <div class="panel">
-        <h2>Upload Data</h2>
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h2>Upload Data</h2>
+            <span class="help-tip" data-tip="Upload interval-level CSV data. The analyzer uses volume, SLA, AHT, and staffing fields to build diagnostics, charts, RCA, and simulations.">?</span>
+          </div>
+        </div>
+
         <div class="small">
           Required columns: Date, Interval, Queue, Forecast Volume, Actual Volume, Answered, Abandoned,
           Required HC, Scheduled HC, Actual HC, Actual AHT, Target AHT, Actual SLA, Target SLA
@@ -337,7 +602,12 @@
       </div>
 
       <div class="panel">
-        <h2>Data Validation</h2>
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h2>Data Validation</h2>
+            <span class="help-tip" data-tip="Quick structural checks before analysis starts. Missing columns or empty rows will stop the analyzer from running.">?</span>
+          </div>
+        </div>
         <div class="small">Quick checks before analysis starts.</div>
 
         <div class="validation-grid">
@@ -393,10 +663,41 @@
       </div>
     </div>
 
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="label">Worst Interval</div>
+        <div class="value" id="insWorstInterval">-</div>
+        <div class="meta" id="insWorstIntervalMeta">No data</div>
+      </div>
+      <div class="insight-card">
+        <div class="label">Total Breach Intervals</div>
+        <div class="value" id="insTotalBreaches">0</div>
+        <div class="meta" id="insTotalBreachesMeta">Intervals below target</div>
+      </div>
+      <div class="insight-card">
+        <div class="label">Max HC Gap</div>
+        <div class="value" id="insMaxGap">0</div>
+        <div class="meta" id="insMaxGapMeta">Largest staffing shortfall</div>
+      </div>
+      <div class="insight-card">
+        <div class="label">Peak Backlog</div>
+        <div class="value" id="insPeakBacklog">0</div>
+        <div class="meta" id="insPeakBacklogMeta">Highest inferred backlog</div>
+      </div>
+      <div class="insight-card">
+        <div class="label">Primary Root Cause</div>
+        <div class="value" id="insPrimaryRca">-</div>
+        <div class="meta" id="insPrimaryRcaMeta">Most frequent interval driver</div>
+      </div>
+    </div>
+
     <div class="charts-grid">
       <div class="panel">
         <div class="section-head">
-          <h3>Forecast vs Actual Volume</h3>
+          <div class="section-title-wrap">
+            <h3>Forecast vs Actual Volume</h3>
+            <span class="help-tip" data-tip="Shows planned demand against actual demand. Large positive variance indicates possible volume spike or forecast miss.">?</span>
+          </div>
           <button class="btn" onclick="downloadChart('volumeChart','forecast-vs-actual-volume.png')">Download PNG</button>
         </div>
         <canvas id="volumeChart"></canvas>
@@ -404,15 +705,43 @@
 
       <div class="panel">
         <div class="section-head">
-          <h3>Staffing Gap Analysis</h3>
+          <div class="section-title-wrap">
+            <h3>Staffing Gap Analysis</h3>
+            <span class="help-tip" data-tip="Compares required and actual headcount by interval. Red bars indicate understaffing against requirement.">?</span>
+          </div>
           <button class="btn" onclick="downloadChart('staffingChart','staffing-gap-analysis.png')">Download PNG</button>
         </div>
         <canvas id="staffingChart"></canvas>
       </div>
 
+      <div class="panel">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h3>Demand vs Capacity</h3>
+            <span class="help-tip" data-tip="Compares forecast volume, actual volume, and estimated handling capacity. This shows whether pressure came from demand, capacity, or both.">?</span>
+          </div>
+          <button class="btn" onclick="downloadChart('demandCapacityChart','demand-vs-capacity.png')">Download PNG</button>
+        </div>
+        <canvas id="demandCapacityChart"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h3>Backlog Trend</h3>
+            <span class="help-tip" data-tip="Backlog is inferred as unfinished workload carried from one interval to the next using actual volume and answered contacts.">?</span>
+          </div>
+          <button class="btn" onclick="downloadChart('backlogChart','backlog-trend.png')">Download PNG</button>
+        </div>
+        <canvas id="backlogChart"></canvas>
+      </div>
+
       <div class="panel chart-panel full">
         <div class="section-head">
-          <h3>SLA & AHT Performance</h3>
+          <div class="section-title-wrap">
+            <h3>SLA & AHT Performance</h3>
+            <span class="help-tip" data-tip="Tracks SLA against target and AHT against target on separate axes so service and efficiency pressure are visible together.">?</span>
+          </div>
           <button class="btn" onclick="downloadChart('slaAhtChart','sla-aht-performance.png')">Download PNG</button>
         </div>
         <canvas id="slaAhtChart"></canvas>
@@ -421,14 +750,103 @@
 
     <div class="panel">
       <div class="section-head">
-        <h2>Executive Summary</h2>
+        <div class="section-title-wrap">
+          <h2>SLA Risk Heatmap</h2>
+          <span class="help-tip" data-tip="Green means safe, amber means watch, and red means higher operational risk based on SLA miss, staffing gap, backlog growth, or performance deterioration.">?</span>
+        </div>
+      </div>
+      <div id="riskHeatmap" class="heatmap-grid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <h2>Executive Summary</h2>
+          <span class="help-tip" data-tip="Leadership-ready summary built from the uploaded data. It highlights service outcome, main drivers, and recommended focus.">?</span>
+        </div>
       </div>
       <div id="executiveSummary" class="summary-box">Upload a CSV to generate the summary.</div>
     </div>
 
     <div class="panel">
       <div class="section-head">
-        <h2>SLA Breach Analyzer</h2>
+        <div class="section-title-wrap">
+          <h2>Management Summary</h2>
+          <span class="help-tip" data-tip="This is a copy-ready summary for presentation decks, emails, or leadership updates.">?</span>
+        </div>
+        <button class="btn" id="copyManagementSummaryBtn">Copy Summary</button>
+      </div>
+      <textarea id="managementSummaryBox" class="summary-box" style="width:100%; min-height:180px; background:rgba(7,17,34,.72); color:#eaf3ff; border:1px solid rgba(95,137,204,.18); border-radius:12px; padding:12px; resize:vertical;" readonly>Upload a CSV to generate the summary.</textarea>
+    </div>
+
+    <div class="panel">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <h2>What-If Simulation</h2>
+          <span class="help-tip" data-tip="Simulate the impact of higher or lower volume, AHT, and available HC. The chart compares current required HC against the simulated requirement.">?</span>
+        </div>
+      </div>
+
+      <div class="whatif-grid">
+        <div class="control-grid">
+          <div class="control-card">
+            <label>Volume Multiplier</label>
+            <input type="range" id="simVolume" min="50" max="150" value="100" />
+            <div class="control-value" id="simVolumeValue">100%</div>
+          </div>
+
+          <div class="control-card">
+            <label>AHT Multiplier</label>
+            <input type="range" id="simAht" min="50" max="150" value="100" />
+            <div class="control-value" id="simAhtValue">100%</div>
+          </div>
+
+          <div class="control-card">
+            <label>Actual HC Multiplier</label>
+            <input type="range" id="simHc" min="50" max="150" value="100" />
+            <div class="control-value" id="simHcValue">100%</div>
+          </div>
+
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn" id="resetSimulationBtn">Reset Simulation</button>
+          </div>
+        </div>
+
+        <div>
+          <canvas id="whatIfChart"></canvas>
+          <div class="whatif-summary">
+            <div class="whatif-mini">
+              <div class="label">Current Avg Req HC</div>
+              <div class="value" id="simBaseReq">-</div>
+            </div>
+            <div class="whatif-mini">
+              <div class="label">Sim Avg Req HC</div>
+              <div class="value" id="simNewReq">-</div>
+            </div>
+            <div class="whatif-mini">
+              <div class="label">Avg HC Gap Impact</div>
+              <div class="value" id="simGapImpact">-</div>
+            </div>
+            <div class="whatif-mini">
+              <div class="label">Estimated SLA Risk Shift</div>
+              <div class="value" id="simRiskShift">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <h2>Interval-wise RCA & Action Plan</h2>
+          <span class="help-tip" data-tip="Each interval is scored for staffing gap, volume variance, AHT variance, backlog growth, and SLA outcome. The analyzer then assigns a severity, root cause, business impact, confidence, and action plan.">?</span>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <label><input type="checkbox" id="filterBreachesOnly"> Show breached intervals only</label>
+        <label><input type="checkbox" id="filterHighSeverityOnly"> Show high severity only</label>
       </div>
 
       <div class="table-wrap">
@@ -439,21 +857,109 @@
               <th>Interval</th>
               <th>Queue</th>
               <th>Status</th>
+              <th>Req HC</th>
+              <th>Act HC</th>
+              <th>Gap</th>
+              <th>Severity</th>
               <th>Actual SLA</th>
               <th>Target SLA</th>
-              <th>Issue</th>
-              <th>Root Cause</th>
-              <th>Recommended Action</th>
-              <th>Forecast Accuracy</th>
-              <th>Staffing Gap</th>
+              <th>Primary Cause</th>
+              <th>Supporting Signals</th>
+              <th>Business Impact</th>
+              <th>Immediate Action</th>
+              <th>Same Day Action</th>
+              <th>Longer Term Action</th>
+              <th>Confidence</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colspan="11" class="small">No analysis yet.</td>
+              <td colspan="17" class="small">No analysis yet.</td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <button class="glossary-toggle" id="glossaryToggleBtn">
+        View Formula Glossary
+      </button>
+
+      <div id="formulaGlossaryWrap" class="glossary-wrap">
+        <div class="glossary-grid">
+          <div class="glossary-card">
+            <h4>Forecast Accuracy</h4>
+            <code>100 - (|Actual - Forecast| / Actual × 100)</code>
+            <p>Measures how closely the forecast matched actual demand.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Weighted SLA</h4>
+            <code>Σ(Actual SLA × Answered) / Σ(Answered)</code>
+            <p>Gives more weight to intervals that handled more contacts.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>AHT Deviation</h4>
+            <code>Average Actual AHT - Average Target AHT</code>
+            <p>Shows whether handling time is above or below target.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Staffing Gap</h4>
+            <code>Actual HC - Required HC</code>
+            <p>Negative means understaffing. Positive means over-coverage.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Volume Variance %</h4>
+            <code>((Actual Volume - Forecast Volume) / Forecast Volume) × 100</code>
+            <p>Measures interval demand spike or softness against plan.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>AHT Variance %</h4>
+            <code>((Actual AHT - Target AHT) / Target AHT) × 100</code>
+            <p>Measures interval handling-time deterioration or improvement.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Backlog Opening</h4>
+            <code>Previous Interval Closing Backlog</code>
+            <p>Carried-forward unfinished workload from the prior interval.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Backlog Closing</h4>
+            <code>max(0, Opening Backlog + Actual Volume - Answered)</code>
+            <p>Approximates remaining demand after handled workload.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Estimated Capacity</h4>
+            <code>(Actual HC × Interval Seconds) / Actual AHT</code>
+            <p>Approximates how many contacts available staff could handle in the interval.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Severity</h4>
+            <code>Based on SLA miss, HC gap %, backlog growth, and AHT / volume pressure</code>
+            <p>Used to classify each interval into low, medium, or high severity.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>Confidence</h4>
+            <code>Single strong signal = High, mixed signals = Medium, weak signal = Low</code>
+            <p>Indicates how strongly the data supports the assigned RCA.</p>
+          </div>
+
+          <div class="glossary-card">
+            <h4>What-If Required HC</h4>
+            <code>(Actual Volume × Volume Multiplier × Actual AHT × AHT Multiplier) / Interval Seconds</code>
+            <p>Shows how staffing requirement changes under simulated conditions.</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -475,9 +981,14 @@
     };
 
     let parsedData = [];
+    let analysisState = null;
+
     let volumeChart = null;
     let staffingChart = null;
+    let demandCapacityChart = null;
+    let backlogChart = null;
     let slaAhtChart = null;
+    let whatIfChart = null;
 
     document.getElementById("csvFile").addEventListener("change", function(e){
       const file = e.target.files[0];
@@ -486,6 +997,15 @@
 
     document.getElementById("sampleBtn").addEventListener("click", downloadSampleCSV);
     document.getElementById("analyzeBtn").addEventListener("click", analyzeCSV);
+    document.getElementById("filterBreachesOnly").addEventListener("change", rerenderRcaTable);
+    document.getElementById("filterHighSeverityOnly").addEventListener("change", rerenderRcaTable);
+    document.getElementById("copyManagementSummaryBtn").addEventListener("click", copyManagementSummary);
+    document.getElementById("glossaryToggleBtn").addEventListener("click", toggleGlossary);
+
+    ["simVolume","simAht","simHc"].forEach(id => {
+      document.getElementById(id).addEventListener("input", updateSimulation);
+    });
+    document.getElementById("resetSimulationBtn").addEventListener("click", resetSimulation);
 
     async function analyzeCSV(){
       const fileInput = document.getElementById("csvFile");
@@ -518,11 +1038,15 @@
 
       setValidationMessage("CSV loaded successfully. Analysis complete.", "good");
 
-      const results = runAnalysis(parsedData);
-      renderKPIs(results.kpis);
-      renderExecutiveSummary(results.summaryText);
-      renderBreachTable(results.breachRows);
-      renderCharts(results);
+      analysisState = runAnalysis(parsedData);
+      renderKPIs(analysisState.kpis);
+      renderInsights(analysisState.insights);
+      renderExecutiveSummary(analysisState.summaryText);
+      renderManagementSummary(analysisState.managementSummary);
+      renderRcaTable(analysisState.rcaRows);
+      renderRiskHeatmap(analysisState.rcaRows);
+      renderCharts(analysisState);
+      resetSimulation();
     }
 
     function setValidationMessage(message, type){
@@ -618,6 +1142,14 @@
 
     function runAnalysis(data){
       const labels = data.map(r => `${r.date} ${r.interval}`);
+      const intervalSeconds = inferIntervalSeconds(data);
+
+      let rollingBacklog = 0;
+      const rcaRows = [];
+      const volumeSpikeIntervals = [];
+      const ahtSpikeIntervals = [];
+      const staffingGapIntervals = [];
+      const queueStats = {};
 
       const totalForecast = sum(data.map(r => r.forecastVolume));
       const totalActual = sum(data.map(r => r.actualVolume));
@@ -642,23 +1174,34 @@
       let worstGap = 0;
       let worstGapLabel = "-";
 
-      const breachRows = [];
-      const volumeSpikeIntervals = [];
-      const ahtSpikeIntervals = [];
-      const staffingGapIntervals = [];
-      const queueStats = {};
-
-      data.forEach(r => {
+      data.forEach((r, idx) => {
         const rowForecastAccuracy = r.actualVolume === 0
           ? 0
           : 100 - (Math.abs(r.actualVolume - r.forecastVolume) / r.actualVolume * 100);
 
         const staffingGap = r.actualHC - r.requiredHC;
-        const volumeSpike = r.actualVolume >= r.forecastVolume * 1.10;
-        const ahtSpike = r.actualAHT >= r.targetAHT * 1.10;
+        const hcGapAbs = Math.max(0, r.requiredHC - r.actualHC);
+        const gapPct = r.requiredHC > 0 ? (hcGapAbs / r.requiredHC) * 100 : 0;
+
+        const volumeVariancePct = percentageDifference(r.actualVolume, r.forecastVolume);
+        const ahtVariancePct = percentageDifference(r.actualAHT, r.targetAHT);
+
+        const estimatedCapacity = r.actualAHT > 0
+          ? (r.actualHC * intervalSeconds) / r.actualAHT
+          : 0;
+
+        const openingBacklog = rollingBacklog;
+        const closingBacklog = Math.max(0, openingBacklog + r.actualVolume - r.answered);
+        rollingBacklog = closingBacklog;
+
+        const backlogRising = closingBacklog > openingBacklog;
+        const volumeSpike = volumeVariancePct > THRESHOLDS.volumeSpikePct;
+        const ahtSpike = ahtVariancePct > THRESHOLDS.ahtSpikePct;
         const hcGap = r.actualHC < r.requiredHC;
         const slaBreach = r.actualSLA < r.targetSLA;
         const forecastConcern = rowForecastAccuracy < THRESHOLDS.forecastConcernPct;
+        const adherenceLoss = r.scheduledHC > 0 ? ((r.scheduledHC - r.actualHC) / r.scheduledHC) * 100 : 0;
+        const availabilityIssue = adherenceLoss > 10;
 
         if(staffingGap < worstGap){
           worstGap = staffingGap;
@@ -675,64 +1218,58 @@
 
         queueStats[r.queue].total += 1;
         if(slaBreach) queueStats[r.queue].breaches += 1;
-
         if(slaBreach) breachCount++;
 
-        const causes = [];
-        const actions = [];
+        const diagnosis = deriveRca({
+          row: r,
+          staffingGap,
+          gapPct,
+          rowForecastAccuracy,
+          volumeVariancePct,
+          ahtVariancePct,
+          forecastConcern,
+          volumeSpike,
+          ahtSpike,
+          hcGap,
+          slaBreach,
+          openingBacklog,
+          closingBacklog,
+          backlogRising,
+          availabilityIssue,
+          adherenceLoss
+        });
 
-        if(hcGap){
-          causes.push(`Understaffed by ${Math.abs(staffingGap)} HC`);
-          actions.push("Reallocate agents from lower-risk queues or approve short-term overtime.");
-        }
+        const issue = slaBreach ? "SLA Breach" : diagnosis.severity === "High" || diagnosis.severity === "Medium" ? "Operational Risk" : "Within Target";
+        const statusClass = slaBreach ? "chip-bad" : issue === "Operational Risk" ? "chip-warn" : "chip-good";
 
-        if(volumeSpike){
-          causes.push(`Volume ${percentageDifference(r.actualVolume, r.forecastVolume).toFixed(1)}% above forecast`);
-          actions.push("Update intraday forecast and build a short-term staffing buffer.");
-        }
-
-        if(ahtSpike){
-          causes.push(`AHT ${percentageDifference(r.actualAHT, r.targetAHT).toFixed(1)}% above target`);
-          actions.push("Review call drivers, process blockers, and provide quick refresher coaching.");
-        }
-
-        if(forecastConcern && !volumeSpike){
-          causes.push(`Forecast accuracy low at ${rowForecastAccuracy.toFixed(1)}%`);
-          actions.push("Review forecast assumptions, inputs, and recent trend shifts.");
-        }
-
-        if(causes.length === 0){
-          causes.push("No major operational exception detected");
-          actions.push("Monitor trend and validate routing, queue mix, or system factors.");
-        }
-
-        let issue = "Within Target";
-        let statusClass = "chip-good";
-
-        if(slaBreach){
-          issue = "SLA Breach";
-          statusClass = "chip-bad";
-        } else if(hcGap || volumeSpike || ahtSpike){
-          issue = "Operational Risk";
-          statusClass = "chip-warn";
-        }
-
-        breachRows.push({
+        rcaRows.push({
           date: r.date,
           interval: r.interval,
           queue: r.queue,
-          issue,
+          status: issue,
           statusClass,
+          requiredHC: r.requiredHC,
+          actualHC: r.actualHC,
+          staffingGap,
           actualSLA: r.actualSLA,
           targetSLA: r.targetSLA,
-          rootCause: causes.join(" | "),
-          action: unique(actions).join(" "),
           forecastAccuracy: rowForecastAccuracy,
-          staffingGap: staffingGap
+          volumeVariancePct,
+          ahtVariancePct,
+          openingBacklog,
+          closingBacklog,
+          estimatedCapacity,
+          severity: diagnosis.severity,
+          primaryCause: diagnosis.primaryCause,
+          supportingSignals: diagnosis.supportingSignals,
+          businessImpact: diagnosis.businessImpact,
+          immediateAction: diagnosis.immediateAction,
+          sameDayAction: diagnosis.sameDayAction,
+          longerTermAction: diagnosis.longerTermAction,
+          confidence: diagnosis.confidence,
+          breached: slaBreach
         });
       });
-
-      breachRows.sort((a, b) => severityScore(b) - severityScore(a));
 
       const topQueue = Object.entries(queueStats).sort((a, b) => {
         const aRate = a[1].total === 0 ? 0 : a[1].breaches / a[1].total;
@@ -740,6 +1277,9 @@
         return bRate - aRate;
       })[0];
 
+      const breachRows = [...rcaRows].sort((a, b) => severityRank(b.severity) - severityRank(a.severity));
+
+      const insights = buildInsights(rcaRows);
       const summaryText = buildExecutiveSummary({
         forecastAccuracy,
         weightedSLA,
@@ -752,7 +1292,20 @@
         volumeSpikeIntervals,
         ahtSpikeIntervals,
         staffingGapIntervals,
-        topQueue
+        topQueue,
+        insights
+      });
+
+      const managementSummary = buildManagementSummary({
+        rcaRows,
+        forecastAccuracy,
+        weightedSLA,
+        avgTargetSLA,
+        breachCount,
+        totalIntervals: data.length,
+        worstGap,
+        ahtDeviation,
+        insights
       });
 
       return {
@@ -765,8 +1318,16 @@
         targetSLA: data.map(r => r.targetSLA),
         actualAHT: data.map(r => r.actualAHT),
         targetAHT: data.map(r => r.targetAHT),
+        demandCapacity: rcaRows.map(r => r.estimatedCapacity),
+        openingBacklog: rcaRows.map(r => r.openingBacklog),
+        closingBacklog: rcaRows.map(r => r.closingBacklog),
+        answered: data.map(r => r.answered),
         breachRows,
+        rcaRows,
+        insights,
         summaryText,
+        managementSummary,
+        intervalSeconds,
         kpis: {
           forecastAccuracy,
           weightedSLA,
@@ -779,6 +1340,234 @@
           breachCount,
           totalIntervals: data.length
         }
+      };
+    }
+
+    function inferIntervalSeconds(data){
+      if(!data.length) return 1800;
+
+      const uniqueByDate = {};
+      data.forEach(r => {
+        if(!uniqueByDate[r.date]) uniqueByDate[r.date] = [];
+        uniqueByDate[r.date].push(r.interval);
+      });
+
+      const firstDate = Object.keys(uniqueByDate)[0];
+      const intervals = (uniqueByDate[firstDate] || []).slice().sort(compareIntervals);
+      if(intervals.length < 2) return 1800;
+
+      const t1 = parseIntervalToMinutes(intervals[0]);
+      const t2 = parseIntervalToMinutes(intervals[1]);
+      const diffMinutes = Math.max(15, t2 - t1 || 30);
+      return diffMinutes * 60;
+    }
+
+    function parseIntervalToMinutes(interval){
+      const match = String(interval).match(/(\d{1,2}):(\d{2})/);
+      if(!match) return 0;
+      return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    function compareIntervals(a, b){
+      return parseIntervalToMinutes(a) - parseIntervalToMinutes(b);
+    }
+
+    function deriveRca(input){
+      const {
+        row, staffingGap, gapPct, rowForecastAccuracy, volumeVariancePct, ahtVariancePct, forecastConcern,
+        volumeSpike, ahtSpike, hcGap, slaBreach, openingBacklog, closingBacklog, backlogRising,
+        availabilityIssue, adherenceLoss
+      } = input;
+
+      const signals = [];
+      const reasons = [];
+
+      if(hcGap){
+        signals.push(`Actual HC ${formatNumber(row.actualHC,1)} vs required ${formatNumber(row.requiredHC,1)}`);
+        reasons.push("staffing");
+      }
+      if(volumeSpike){
+        signals.push(`Volume variance +${formatNumber(volumeVariancePct,1)}%`);
+        reasons.push("volume");
+      }
+      if(ahtSpike){
+        signals.push(`AHT variance +${formatNumber(ahtVariancePct,1)}%`);
+        reasons.push("aht");
+      }
+      if(availabilityIssue){
+        signals.push(`Availability loss ${formatNumber(adherenceLoss,1)}% vs scheduled`);
+        reasons.push("availability");
+      }
+      if(backlogRising && closingBacklog > 0){
+        signals.push(`Backlog increased to ${formatNumber(closingBacklog,0)}`);
+        reasons.push("backlog");
+      }
+      if(forecastConcern && !volumeSpike){
+        signals.push(`Forecast accuracy ${formatNumber(rowForecastAccuracy,1)}%`);
+      }
+
+      let primaryCause = "Stable Performance";
+
+      if(reasons.length >= 3){
+        primaryCause = "Multi-factor Issue";
+      } else if(hcGap && ahtSpike){
+        primaryCause = "Understaffing + AHT Pressure";
+      } else if(hcGap && volumeSpike){
+        primaryCause = "Understaffing + Volume Spike";
+      } else if(availabilityIssue){
+        primaryCause = "High Shrinkage / Adherence Loss";
+      } else if(ahtSpike){
+        primaryCause = "AHT Increase";
+      } else if(volumeSpike){
+        primaryCause = "Unforecasted Volume Spike";
+      } else if(backlogRising && closingBacklog > openingBacklog){
+        primaryCause = "Backlog Accumulation";
+      } else if(hcGap){
+        primaryCause = "Understaffing";
+      }
+
+      let severity = "Low";
+      const severityScore =
+        (slaBreach ? 4 : 0) +
+        (gapPct > 15 ? 3 : gapPct > 5 ? 2 : hcGap ? 1 : 0) +
+        (ahtVariancePct > 10 ? 2 : 0) +
+        (volumeVariancePct > 10 ? 2 : 0) +
+        (closingBacklog > row.actualVolume * 0.2 ? 2 : closingBacklog > 0 ? 1 : 0);
+
+      if(severityScore >= 7) severity = "High";
+      else if(severityScore >= 4) severity = "Medium";
+
+      let confidence = "Low";
+      if(reasons.length >= 2) confidence = "Medium";
+      if((hcGap && gapPct > 15) || (ahtSpike && volumeSpike) || reasons.length >= 3) confidence = "High";
+
+      const plans = getActionBundle(primaryCause);
+
+      return {
+        severity,
+        confidence,
+        primaryCause,
+        supportingSignals: signals.length ? signals.join(" | ") : "No major exception signal detected",
+        businessImpact: getBusinessImpact(primaryCause, slaBreach, closingBacklog),
+        immediateAction: plans.immediate,
+        sameDayAction: plans.sameDay,
+        longerTermAction: plans.longerTerm
+      };
+    }
+
+    function getBusinessImpact(cause, slaBreach, closingBacklog){
+      if(cause === "Stable Performance"){
+        return "Low immediate service risk. Continue monitoring for trend shifts.";
+      }
+      if(cause.includes("Understaffing")){
+        return closingBacklog > 0
+          ? "Queue delay and backlog carry-forward risk increased."
+          : "Service level pressure increased due to insufficient interval capacity.";
+      }
+      if(cause === "AHT Increase"){
+        return "Lower throughput reduced response speed and increased handling pressure.";
+      }
+      if(cause === "Unforecasted Volume Spike"){
+        return "Unexpected demand increased workload above planned operating level.";
+      }
+      if(cause === "High Shrinkage / Adherence Loss"){
+        return "Available headcount dropped below plan during service windows.";
+      }
+      if(cause === "Backlog Accumulation"){
+        return "Pending workload rolled into following intervals and increased downstream risk.";
+      }
+      return slaBreach
+        ? "Multiple drivers contributed to service degradation during this interval."
+        : "Multiple operational drivers increased performance risk.";
+    }
+
+    function getActionBundle(cause){
+      const bundles = {
+        "Understaffing": {
+          immediate: "Move breaks, pull overtime, and rebalance agents from lower-risk queues.",
+          sameDay: "Reforecast remaining intervals and protect peak windows with extra coverage.",
+          longerTerm: "Adjust shift coverage and tighten staffing model for recurring peaks."
+        },
+        "Understaffing + AHT Pressure": {
+          immediate: "Recover HC and reduce handling friction through quick guidance and escalation control.",
+          sameDay: "Review top contact drivers and realign staffing toward the affected queue.",
+          longerTerm: "Fix both staffing design and process drivers contributing to elevated AHT."
+        },
+        "Understaffing + Volume Spike": {
+          immediate: "Activate backup coverage and prioritize critical contacts during the spike.",
+          sameDay: "Refresh intraday forecast and redistribute staffing toward high-load periods.",
+          longerTerm: "Improve event-based forecast assumptions and peak staffing buffers."
+        },
+        "AHT Increase": {
+          immediate: "Share quick resolution guidance and remove avoidable process blockers.",
+          sameDay: "Review call drivers, repeat contacts, and knowledge gaps driving longer handle time.",
+          longerTerm: "Run targeted coaching and process redesign for the repeated AHT drivers."
+        },
+        "Unforecasted Volume Spike": {
+          immediate: "Reallocate support, prioritize key queues, and update the intraday plan.",
+          sameDay: "Adjust staffing response using revised forecast and queue priorities.",
+          longerTerm: "Improve forecasting logic for recurring volume surges and event-driven peaks."
+        },
+        "High Shrinkage / Adherence Loss": {
+          immediate: "Bring agents back from offline states and control avoidable auxiliary leakage.",
+          sameDay: "Audit late login, meetings, breaks, absenteeism, and unplanned off-phone time.",
+          longerTerm: "Strengthen adherence governance and tighten shrinkage assumptions."
+        },
+        "Backlog Accumulation": {
+          immediate: "Focus on oldest pending work first and add temporary clearing capacity.",
+          sameDay: "Protect downstream intervals by reducing new overflow and reprioritizing queues.",
+          longerTerm: "Build backlog recovery buffers and redesign coverage around carry-forward pressure."
+        },
+        "Multi-factor Issue": {
+          immediate: "Apply staffing recovery, queue prioritization, and AHT stabilizers together.",
+          sameDay: "Run interval-by-interval reforecast and operational decision review.",
+          longerTerm: "Fix forecast quality, staffing coverage, and process drivers in one combined plan."
+        },
+        "Stable Performance": {
+          immediate: "Continue monitoring and maintain current operating controls.",
+          sameDay: "Validate that recent performance remains stable across the next intervals.",
+          longerTerm: "Track trend signals and refresh assumptions only if sustained deviation appears."
+        }
+      };
+
+      return bundles[cause] || bundles["Multi-factor Issue"];
+    }
+
+    function buildInsights(rows){
+      if(!rows.length){
+        return {
+          worstInterval: "-",
+          worstMeta: "No data",
+          totalBreaches: 0,
+          maxGap: 0,
+          peakBacklog: 0,
+          primaryRca: "-"
+        };
+      }
+
+      const worstBySeverity = [...rows].sort((a, b) => {
+        const diff = severityRank(b.severity) - severityRank(a.severity);
+        if(diff !== 0) return diff;
+        return b.closingBacklog - a.closingBacklog;
+      })[0];
+
+      const maxGap = Math.max(...rows.map(r => Math.max(0, r.requiredHC - r.actualHC)));
+      const peakBacklog = Math.max(...rows.map(r => r.closingBacklog || 0));
+      const totalBreaches = rows.filter(r => r.breached).length;
+
+      const causeCounts = {};
+      rows.forEach(r => {
+        causeCounts[r.primaryCause] = (causeCounts[r.primaryCause] || 0) + 1;
+      });
+      const primaryRca = Object.entries(causeCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
+
+      return {
+        worstInterval: worstBySeverity ? `${worstBySeverity.date} ${worstBySeverity.interval}` : "-",
+        worstMeta: worstBySeverity ? `${worstBySeverity.primaryCause} | ${worstBySeverity.severity} severity` : "No data",
+        totalBreaches,
+        maxGap,
+        peakBacklog,
+        primaryRca
       };
     }
 
@@ -821,10 +1610,41 @@
       }
 
       lines.push(
+        `Primary operational driver across intervals was ${data.insights.primaryRca}. Worst observed interval was ${data.insights.worstInterval}, and peak inferred backlog reached ${formatNumber(data.insights.peakBacklog,0)}.`
+      );
+
+      lines.push(
         "Recommended focus: tighten intraday staffing response where HC gaps repeat, recalibrate forecast assumptions when volume exceeds plan by 10%+, and review process or knowledge issues whenever AHT stays 10% above target."
       );
 
       return lines.join("\n\n");
+    }
+
+    function buildManagementSummary(data){
+      const topHigh = data.rcaRows.filter(r => r.severity === "High").slice(0, 5).map(r => `${r.date} ${r.interval}`);
+      const lines = [];
+
+      lines.push(`Operations experienced service pressure driven primarily by ${data.insights.primaryRca.toLowerCase()}.`);
+      lines.push("");
+      lines.push("Key Highlights:");
+      lines.push(`- Forecast accuracy: ${data.forecastAccuracy.toFixed(1)}%`);
+      lines.push(`- Weighted SLA: ${data.weightedSLA.toFixed(1)}% vs target ${data.avgTargetSLA.toFixed(1)}%`);
+      lines.push(`- Total breached intervals: ${data.breachCount} of ${data.totalIntervals}`);
+      lines.push(`- Maximum staffing gap: ${formatNumber(Math.abs(Math.min(0, data.worstGap)),1)} HC`);
+      lines.push(`- Average AHT deviation: ${formatSigned(data.ahtDeviation)} sec`);
+      lines.push(`- Peak backlog: ${formatNumber(data.insights.peakBacklog,0)}`);
+      lines.push(`- Worst interval: ${data.insights.worstInterval}`);
+      if(topHigh.length){
+        lines.push(`- Highest-risk intervals: ${topHigh.join(", ")}`);
+      }
+      lines.push("");
+      lines.push("Recommended Focus:");
+      lines.push("- Stabilize peak staffing coverage through faster intraday response.");
+      lines.push("- Refresh forecast and queue prioritization when actual demand materially exceeds plan.");
+      lines.push("- Investigate repeated AHT or process pressure in the affected intervals.");
+      lines.push("- Prevent backlog carry-forward by protecting downstream intervals with recovery actions.");
+
+      return lines.join("\n");
     }
 
     function renderKPIs(kpis){
@@ -859,6 +1679,15 @@
       );
     }
 
+    function renderInsights(insights){
+      document.getElementById("insWorstInterval").textContent = insights.worstInterval;
+      document.getElementById("insWorstIntervalMeta").textContent = insights.worstMeta;
+      document.getElementById("insTotalBreaches").textContent = insights.totalBreaches;
+      document.getElementById("insMaxGap").textContent = `${formatNumber(insights.maxGap,1)} HC`;
+      document.getElementById("insPeakBacklog").textContent = formatNumber(insights.peakBacklog,0);
+      document.getElementById("insPrimaryRca").textContent = insights.primaryRca;
+    }
+
     function setKPI(valueId, metaId, valueText, colorClass, metaText){
       const valueEl = document.getElementById(valueId);
       valueEl.textContent = valueText;
@@ -870,29 +1699,71 @@
       document.getElementById("executiveSummary").textContent = summary;
     }
 
-    function renderBreachTable(rows){
-      const tbody = document.querySelector("#breachTable tbody");
+    function renderManagementSummary(summary){
+      document.getElementById("managementSummaryBox").value = summary;
+    }
 
-      if(rows.length === 0){
-        tbody.innerHTML = `<tr><td colspan="11" class="small">No rows to display.</td></tr>`;
+    function rerenderRcaTable(){
+      if(!analysisState) return;
+      renderRcaTable(analysisState.rcaRows);
+    }
+
+    function renderRcaTable(rows){
+      const tbody = document.querySelector("#breachTable tbody");
+      const breachesOnly = document.getElementById("filterBreachesOnly").checked;
+      const highOnly = document.getElementById("filterHighSeverityOnly").checked;
+
+      const filtered = rows.filter(row => {
+        if(breachesOnly && !row.breached) return false;
+        if(highOnly && row.severity !== "High") return false;
+        return true;
+      });
+
+      if(filtered.length === 0){
+        tbody.innerHTML = `<tr><td colspan="17" class="small">No intervals match the current filter.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = rows.map(row => `
+      tbody.innerHTML = filtered.map(row => `
         <tr>
           <td>${escapeHtml(row.date)}</td>
           <td>${escapeHtml(row.interval)}</td>
           <td>${escapeHtml(row.queue)}</td>
-          <td><span class="status-chip ${row.statusClass}">${escapeHtml(row.issue)}</span></td>
+          <td><span class="status-chip ${row.statusClass}">${escapeHtml(row.status)}</span></td>
+          <td>${formatNumber(row.requiredHC,1)}</td>
+          <td>${formatNumber(row.actualHC,1)}</td>
+          <td>${formatSigned(row.staffingGap)} HC</td>
+          <td><span class="status-chip ${getSeverityClass(row.severity)}">${escapeHtml(row.severity)}</span></td>
           <td>${row.actualSLA.toFixed(1)}%</td>
           <td>${row.targetSLA.toFixed(1)}%</td>
-          <td>${escapeHtml(row.issue)}</td>
-          <td>${escapeHtml(row.rootCause)}</td>
-          <td>${escapeHtml(row.action)}</td>
-          <td>${row.forecastAccuracy.toFixed(1)}%</td>
-          <td>${formatSigned(row.staffingGap)} HC</td>
+          <td>${escapeHtml(row.primaryCause)}</td>
+          <td>${escapeHtml(row.supportingSignals)}</td>
+          <td>${escapeHtml(row.businessImpact)}</td>
+          <td>${escapeHtml(row.immediateAction)}</td>
+          <td>${escapeHtml(row.sameDayAction)}</td>
+          <td>${escapeHtml(row.longerTermAction)}</td>
+          <td><span class="status-chip ${getConfidenceClass(row.confidence)}">${escapeHtml(row.confidence)}</span></td>
         </tr>
       `).join("");
+    }
+
+    function renderRiskHeatmap(rows){
+      const el = document.getElementById("riskHeatmap");
+      if(!rows.length){
+        el.innerHTML = `<div class="small">No analysis yet.</div>`;
+        return;
+      }
+
+      el.innerHTML = rows.map(row => {
+        const cls = row.severity === "High" ? "hm-risk" : row.severity === "Medium" ? "hm-watch" : "hm-safe";
+        return `
+          <div class="heatmap-cell ${cls}">
+            <div><strong>${escapeHtml(row.interval)}</strong></div>
+            <div>${escapeHtml(row.queue)}</div>
+            <div>${escapeHtml(row.severity)}</div>
+          </div>
+        `;
+      }).join("");
     }
 
     function renderCharts(results){
@@ -913,7 +1784,8 @@
               borderColor: "#60a5fa",
               backgroundColor: "rgba(96,165,250,0.12)",
               tension: 0.25,
-              pointRadius: 2
+              pointRadius: 2,
+              borderWidth: 2
             },
             {
               label: "Actual Volume",
@@ -922,7 +1794,8 @@
               backgroundColor: "rgba(54,227,156,0.12)",
               pointBackgroundColor: pointColors,
               tension: 0.25,
-              pointRadius: 3
+              pointRadius: 3,
+              borderWidth: 2
             }
           ]
         },
@@ -951,6 +1824,68 @@
         options: buildChartOptions("Headcount")
       });
 
+      demandCapacityChart = new Chart(document.getElementById("demandCapacityChart"), {
+        type: "bar",
+        data: {
+          labels: results.labels,
+          datasets: [
+            {
+              label: "Forecast Volume",
+              data: results.volumeForecast,
+              backgroundColor: "rgba(96,165,250,0.65)"
+            },
+            {
+              label: "Actual Volume",
+              data: results.volumeActual,
+              backgroundColor: "rgba(54,227,156,0.65)"
+            },
+            {
+              label: "Estimated Capacity",
+              data: results.demandCapacity,
+              backgroundColor: "rgba(255,191,71,0.75)"
+            }
+          ]
+        },
+        options: buildChartOptions("Contacts")
+      });
+
+      backlogChart = new Chart(document.getElementById("backlogChart"), {
+        type: "line",
+        data: {
+          labels: results.labels,
+          datasets: [
+            {
+              label: "Opening Backlog",
+              data: results.openingBacklog,
+              borderColor: "#60a5fa",
+              backgroundColor: "rgba(96,165,250,0.10)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            },
+            {
+              label: "Answered",
+              data: results.answered,
+              borderColor: "#36e39c",
+              backgroundColor: "rgba(54,227,156,0.10)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            },
+            {
+              label: "Closing Backlog",
+              data: results.closingBacklog,
+              borderColor: "#ff6b7a",
+              backgroundColor: "rgba(255,107,122,0.10)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: buildChartOptions("Contacts")
+      });
+
       slaAhtChart = new Chart(document.getElementById("slaAhtChart"), {
         type: "line",
         data: {
@@ -963,7 +1898,8 @@
               backgroundColor: "rgba(54,227,156,0.12)",
               yAxisID: "y",
               tension: 0.2,
-              pointRadius: 2
+              pointRadius: 2,
+              borderWidth: 2
             },
             {
               label: "Target SLA",
@@ -972,7 +1908,8 @@
               borderDash: [6,4],
               yAxisID: "y",
               tension: 0,
-              pointRadius: 0
+              pointRadius: 0,
+              borderWidth: 2
             },
             {
               label: "Actual AHT",
@@ -981,7 +1918,8 @@
               backgroundColor: "rgba(255,191,71,0.12)",
               yAxisID: "y1",
               tension: 0.2,
-              pointRadius: 2
+              pointRadius: 2,
+              borderWidth: 2
             },
             {
               label: "Target AHT",
@@ -990,7 +1928,8 @@
               borderDash: [6,4],
               yAxisID: "y1",
               tension: 0,
-              pointRadius: 0
+              pointRadius: 0,
+              borderWidth: 2
             }
           ]
         },
@@ -1013,7 +1952,8 @@
               ticks: {
                 color: "#cfe3ff",
                 maxRotation: 0,
-                autoSkip: true
+                autoSkip: true,
+                maxTicksLimit: 18
               },
               grid: {
                 color: "rgba(95,137,204,.18)"
@@ -1072,7 +2012,8 @@
             ticks: {
               color: "#cfe3ff",
               maxRotation: 0,
-              autoSkip: true
+              autoSkip: true,
+              maxTicksLimit: 18
             },
             grid: {
               color: "rgba(95,137,204,.18)"
@@ -1095,10 +2036,94 @@
       };
     }
 
+    function updateSimulation(){
+      if(!analysisState || !parsedData.length) return;
+
+      const volumePct = Number(document.getElementById("simVolume").value);
+      const ahtPct = Number(document.getElementById("simAht").value);
+      const hcPct = Number(document.getElementById("simHc").value);
+
+      document.getElementById("simVolumeValue").textContent = `${volumePct}%`;
+      document.getElementById("simAhtValue").textContent = `${ahtPct}%`;
+      document.getElementById("simHcValue").textContent = `${hcPct}%`;
+
+      const volumeFactor = volumePct / 100;
+      const ahtFactor = ahtPct / 100;
+      const hcFactor = hcPct / 100;
+      const intervalSeconds = analysisState.intervalSeconds || 1800;
+
+      const simulatedRequired = parsedData.map(r => {
+        const workloadSeconds = (r.actualVolume * volumeFactor) * (r.actualAHT * ahtFactor);
+        return intervalSeconds > 0 ? workloadSeconds / intervalSeconds : 0;
+      });
+
+      const simulatedActualHc = parsedData.map(r => r.actualHC * hcFactor);
+
+      const currentAvgReq = average(analysisState.requiredHC);
+      const simAvgReq = average(simulatedRequired);
+      const currentAvgGap = average(parsedData.map(r => r.actualHC - r.requiredHC));
+      const simAvgGap = average(simulatedActualHc.map((hc, i) => hc - simulatedRequired[i]));
+
+      document.getElementById("simBaseReq").textContent = formatNumber(currentAvgReq,1);
+      document.getElementById("simNewReq").textContent = formatNumber(simAvgReq,1);
+      document.getElementById("simGapImpact").textContent = `${formatSigned(simAvgGap - currentAvgGap)} HC`;
+      document.getElementById("simRiskShift").textContent =
+        simAvgGap < currentAvgGap ? "Higher Risk" : simAvgGap > currentAvgGap ? "Lower Risk" : "Stable";
+
+      if(whatIfChart) whatIfChart.destroy();
+
+      whatIfChart = new Chart(document.getElementById("whatIfChart"), {
+        type: "line",
+        data: {
+          labels: analysisState.labels,
+          datasets: [
+            {
+              label: "Current Required HC",
+              data: analysisState.requiredHC,
+              borderColor: "#60a5fa",
+              backgroundColor: "rgba(96,165,250,0.12)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            },
+            {
+              label: "Simulated Required HC",
+              data: simulatedRequired,
+              borderColor: "#ffbf47",
+              backgroundColor: "rgba(255,191,71,0.12)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            },
+            {
+              label: "Simulated Actual HC",
+              data: simulatedActualHc,
+              borderColor: "#36e39c",
+              backgroundColor: "rgba(54,227,156,0.12)",
+              tension: 0.25,
+              pointRadius: 2,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: buildChartOptions("Headcount")
+      });
+    }
+
+    function resetSimulation(){
+      document.getElementById("simVolume").value = 100;
+      document.getElementById("simAht").value = 100;
+      document.getElementById("simHc").value = 100;
+      updateSimulation();
+    }
+
     function destroyCharts(){
       if(volumeChart) volumeChart.destroy();
       if(staffingChart) staffingChart.destroy();
+      if(demandCapacityChart) demandCapacityChart.destroy();
+      if(backlogChart) backlogChart.destroy();
       if(slaAhtChart) slaAhtChart.destroy();
+      if(whatIfChart) whatIfChart.destroy();
     }
 
     function downloadChart(canvasId, fileName){
@@ -1115,7 +2140,9 @@
         ["2026-03-01","09:00","Billing","120","135","126","9","20","19","18","540","500","76","80"],
         ["2026-03-01","09:30","Billing","140","150","140","10","22","21","20","560","500","74","80"],
         ["2026-03-01","10:00","Support","160","158","150","8","24","24","23","520","500","82","80"],
-        ["2026-03-01","10:30","Support","170","180","165","15","26","25","24","590","500","72","80"]
+        ["2026-03-01","10:30","Support","170","180","165","15","26","25","24","590","500","72","80"],
+        ["2026-03-01","11:00","Support","150","172","155","17","25","24","22","610","500","70","80"],
+        ["2026-03-01","11:30","Billing","145","138","132","6","21","21","21","505","500","83","80"]
       ];
 
       const csvContent = sampleRows.map(row => row.join(",")).join("\n");
@@ -1127,13 +2154,31 @@
       URL.revokeObjectURL(link.href);
     }
 
-    function severityScore(row){
-      let score = 0;
-      if(row.issue === "SLA Breach") score += 10;
-      if(row.rootCause.includes("Understaffed")) score += 4;
-      if(row.rootCause.includes("Volume")) score += 3;
-      if(row.rootCause.includes("AHT")) score += 3;
-      return score;
+    async function copyManagementSummary(){
+      const text = document.getElementById("managementSummaryBox").value;
+      try{
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById("copyManagementSummaryBtn");
+        const old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(() => btn.textContent = old, 1200);
+      }catch(e){
+        alert("Copy failed. Please copy the summary manually.");
+      }
+    }
+
+    function toggleGlossary(){
+      document.getElementById("formulaGlossaryWrap").classList.toggle("open");
+      document.getElementById("glossaryToggleBtn").textContent =
+        document.getElementById("formulaGlossaryWrap").classList.contains("open")
+          ? "Hide Formula Glossary"
+          : "View Formula Glossary";
+    }
+
+    function severityRank(severity){
+      if(severity === "High") return 3;
+      if(severity === "Medium") return 2;
+      return 1;
     }
 
     function sum(arr){
@@ -1155,12 +2200,16 @@
       return ((actual - base) / base) * 100;
     }
 
-    function unique(arr){
-      return [...new Set(arr)];
+    function formatSigned(value){
+      const num = Number(value || 0);
+      return `${num > 0 ? "+" : ""}${num.toFixed(1)}`;
     }
 
-    function formatSigned(value){
-      return `${value > 0 ? "+" : ""}${Number(value).toFixed(1)}`;
+    function formatNumber(value, decimals = 0){
+      return Number(value || 0).toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
     }
 
     function getForecastClass(value){
@@ -1195,6 +2244,18 @@
       if(ratio <= 0.10) return "good";
       if(ratio <= 0.25) return "warn";
       return "bad";
+    }
+
+    function getSeverityClass(severity){
+      if(severity === "High") return "sev-high";
+      if(severity === "Medium") return "sev-medium";
+      return "sev-low";
+    }
+
+    function getConfidenceClass(confidence){
+      if(confidence === "High") return "conf-high";
+      if(confidence === "Medium") return "conf-medium";
+      return "conf-low";
     }
 
     function escapeHtml(text){
